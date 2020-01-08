@@ -1,4 +1,4 @@
-package com.mycompany.test;
+package com.github.andreasarvidsson.founds;
 
 /**
  *

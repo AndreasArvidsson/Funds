@@ -1,4 +1,4 @@
-package com.mycompany.test;
+package com.github.andreasarvidsson.founds;
 
 import java.util.HashMap;
 import java.util.Iterator;

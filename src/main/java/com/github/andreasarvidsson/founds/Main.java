@@ -1,4 +1,4 @@
-package com.mycompany.test;
+package com.github.andreasarvidsson.founds;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

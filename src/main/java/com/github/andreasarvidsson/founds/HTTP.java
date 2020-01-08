@@ -1,4 +1,4 @@
-package com.mycompany.test;
+package com.github.andreasarvidsson.founds;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
