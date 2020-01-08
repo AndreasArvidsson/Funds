@@ -127,6 +127,12 @@ public class PortfolioSummary {
         table.addRow("", name, summary.name, "Skillnad");
         table.addHR();
         table.addRow(
+                "# Fonder",
+                Integer.toString(founds.size()),
+                Integer.toString(summary.founds.size()),
+                Integer.toString(summary.founds.size() - founds.size())
+        );
+        table.addRow(
                 "Andel (%)",
                 format(percentageSum),
                 format(summary.percentageSum),
