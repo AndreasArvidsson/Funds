@@ -6,6 +6,9 @@ package com.github.andreasarvidsson.founds;
  */
 public abstract class Regions {
 
+    public static final String SWEDEN = "Sverige";
+    public static final String ASIA = "Asien exkl Japan";
+
     public static String get(final String country) {
         switch (country) {
             case "Sverige":
@@ -71,7 +74,7 @@ public abstract class Regions {
             case "Indonesien":
             case "Filippinerna":
             case "Pakistan":
-                return "Asien exkl Japan";
+                return ASIA;
 
             case "Sydafrika":
             case "Saudiarabien":

@@ -35,7 +35,9 @@ public class PortfolioSummary {
             avgFee += found.productFee * percentage;
             found.countryChartData.forEach(data -> {
                 addToMap(countriesMap, data.name, data.y * percentage);
-                addToMap(regionsMap, Regions.get(data.name), data.y * percentage);
+            });
+            found.regionChartData.forEach(data -> {
+                addToMap(regionsMap, data.name, data.y * percentage);
             });
             found.sectorChartData.forEach(data -> {
                 addToMap(sectorsMap, data.name, data.y * percentage);
@@ -46,10 +48,9 @@ public class PortfolioSummary {
         }
         avgFee /= percentageSum;
         countries = normalizeMap(countriesMap);
-        sectors = normalizeMap(sectorsMap);
         regions = normalizeMap(regionsMap);
+        sectors = normalizeMap(sectorsMap);
         developments.normalize(founds.size(), percentageSum);
-        percentageSum *= 100;
     }
 
     public void print() {
@@ -60,7 +61,7 @@ public class PortfolioSummary {
         final Table table = new Table();
 
         final List<String> titles = new ArrayList();
-        titles.addAll(Arrays.asList("Namn", "Andel (%)", "Avgift (%)", "Kategorier"));
+        titles.addAll(Arrays.asList("Namn", "Andel (%)", "Avgift (%)", "Kategorier", "Sverige (%W)", "Asien (%W)"));
         titles.addAll(Found.DEVELOPMENT_TITLES);
         table.addRow(titles);
         table.addHR();
@@ -73,7 +74,9 @@ public class PortfolioSummary {
                     found.name,
                     format(percentage * 100),
                     format(found.productFee),
-                    String.join(", ", found.categories)
+                    String.join(", ", found.categories),
+                    getRegion(found, percentage, Regions.SWEDEN),
+                    getRegion(found, percentage, Regions.ASIA)
             ));
             found.getDevelopment().forEach(d -> {
                 row.add(format(d.second()));
@@ -86,9 +89,11 @@ public class PortfolioSummary {
         final List<String> row = new ArrayList();
         row.addAll(Arrays.asList(
                 "",
-                format(percentageSum),
+                format(percentageSum * 100),
                 format(avgFee),
-                ""
+                "",
+                getRegion(Regions.SWEDEN),
+                getRegion(Regions.ASIA)
         ));
         Found.DEVELOPMENT_TITLES.forEach(title -> {
             if (developments.has(title)) {
@@ -118,6 +123,24 @@ public class PortfolioSummary {
         table.print();
     }
 
+    private String getRegion(
+            final Found found,
+            final double percentage,
+            final String regionName) {
+        final double value = found.getRegion(regionName);
+        return String.format("%.2f", value * percentage);
+    }
+
+    private String getRegion(
+            final String regionName) {
+        for (final Pair<String, Double> pair : regions) {
+            if (regionName.equals(pair.first())) {
+                return String.format("%.2f", pair.second());
+            }
+        }
+        return "0.0";
+    }
+
     public void compare(final PortfolioSummary summary) {
         System.out.printf(
                 "\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< %s vs %s >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n",
@@ -134,9 +157,9 @@ public class PortfolioSummary {
         );
         table.addRow(
                 "Andel (%)",
-                format(percentageSum),
-                format(summary.percentageSum),
-                format(summary.percentageSum - percentageSum)
+                format(percentageSum * 100),
+                format(summary.percentageSum * 100),
+                format((summary.percentageSum - percentageSum) * 100)
         );
         table.addRow(
                 "Avgift (%)",
