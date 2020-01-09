@@ -18,13 +18,14 @@ public class PortfolioSummary {
     public double percentageSum, avgFee;
     public final List<Pair<Found, Double>> founds;
     public List<Pair<String, Double>> countries, sectors, regions;
-    public final Developments developments = new Developments();
+    public final Developments developments;
 
     public PortfolioSummary(
             final String name,
             final List<Pair<Found, Double>> founds) throws IOException {
         this.name = name;
         this.founds = founds;
+        developments = new Developments(founds);
         final Map<String, Double> countriesMap = new HashMap();
         final Map<String, Double> sectorsMap = new HashMap();
         final Map<String, Double> regionsMap = new HashMap();
@@ -42,15 +43,11 @@ public class PortfolioSummary {
             found.sectorChartData.forEach(data -> {
                 addToMap(sectorsMap, data.name, data.y * percentage);
             });
-            found.getDevelopment().forEach(d -> {
-                developments.add(d.first(), d.second() * percentage);
-            });
         }
         avgFee /= percentageSum;
         countries = normalizeMap(countriesMap);
         regions = normalizeMap(regionsMap);
         sectors = normalizeMap(sectorsMap);
-        developments.normalize(founds.size(), percentageSum);
     }
 
     public void print() {
@@ -62,7 +59,7 @@ public class PortfolioSummary {
 
         final List<String> titles = new ArrayList();
         titles.addAll(Arrays.asList("Namn", "Andel (%)", "Avgift (%)", "Kategorier", "Sverige (%W)", "Asien (%W)"));
-        titles.addAll(Found.DEVELOPMENT_TITLES);
+        titles.addAll(Developments.DEVELOPMENT_TITLES);
         table.addRow(titles);
         table.addHR();
 
@@ -78,7 +75,7 @@ public class PortfolioSummary {
                     getRegion(found, percentage, Regions.SWEDEN),
                     getRegion(found, percentage, Regions.ASIA)
             ));
-            found.getDevelopment().forEach(d -> {
+            Developments.getDevelopment(found).forEach(d -> {
                 row.add(format(d.second()));
             });
             table.addRow(row);
@@ -95,7 +92,7 @@ public class PortfolioSummary {
                 getRegion(Regions.SWEDEN),
                 getRegion(Regions.ASIA)
         ));
-        Found.DEVELOPMENT_TITLES.forEach(title -> {
+        Developments.DEVELOPMENT_TITLES.forEach(title -> {
             if (developments.has(title)) {
                 row.add(format(developments.get(title)));
             }
@@ -183,7 +180,7 @@ public class PortfolioSummary {
                 "Skillnad (%)"
         );
         table.addHR();
-        Found.DEVELOPMENT_TITLES.forEach(title -> {
+        Developments.DEVELOPMENT_TITLES.forEach(title -> {
             if (developments.has(title) && summary.developments.has(title)) {
                 final double val1 = developments.get(title);
                 final double val2 = summary.developments.get(title);
