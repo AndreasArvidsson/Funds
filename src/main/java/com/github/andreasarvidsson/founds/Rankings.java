@@ -61,7 +61,9 @@ public class Rankings {
 
     public void print() {
         System.out.printf(
-                "\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Ranking >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n"
+                "\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+                + " Ranking "
+                + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n"
         );
         final Table table = new Table();
         final List<String> headers = new ArrayList();

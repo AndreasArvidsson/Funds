@@ -10,26 +10,29 @@ import java.util.List;
  */
 public class Table {
 
+    private final List<String> headers = new ArrayList();
     private final List<Row> rows = new ArrayList();
     private final List<Integer> colWidths = new ArrayList();
 
     public void reset() {
+        headers.clear();
         rows.clear();
         colWidths.clear();
     }
 
+    public Table addHeaders(final String... headers) {
+        return addHeaders(Arrays.asList(headers));
+    }
+
+    public Table addHeaders(final List<String> headers) {
+        this.headers.addAll(headers);
+        updateColWidths(this.headers);
+        return this;
+    }
+
     public Table addRow(final List<String> cells) {
         rows.add(new Row(cells));
-        while (colWidths.size() < cells.size()) {
-            colWidths.add(0);
-        }
-        for (int i = 0; i < cells.size(); ++i) {
-            colWidths.set(i,
-                    Math.max(colWidths.get(i),
-                            cells.get(i).length()
-                    )
-            );
-        }
+        updateColWidths(cells);
         return this;
     }
 
@@ -49,27 +52,58 @@ public class Table {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
+        addHeaders(sb);
         rows.forEach(row -> {
             if (row.hr) {
-                for (int i = 0; i < colWidths.size(); i++) {
-                    final int colWidth = getCellWidth(i, colWidths.size());
-                    pad(sb, colWidth, '-');
-                }
+                addHR(sb);
             }
             else if (row.cells != null) {
                 for (int i = 0; i < row.cells.size(); i++) {
-                    final int colWidth = getCellWidth(i, row.cells.size());
-                    final String cell = row.cells.get(i);
-                    sb.append(cell);
-                    pad(sb, colWidth - cell.length(), ' ');
+                    addCell(sb, row.cells.get(i), getColWidth(i, row.cells.size()));
                 }
+                sb.append(System.lineSeparator());
             }
-            sb.append(System.lineSeparator());
         });
         return sb.toString();
     }
 
-    private int getCellWidth(final int index, final int size) {
+    private void addHeaders(final StringBuilder sb) {
+        if (!headers.isEmpty()) {
+            for (int i = 0; i < headers.size(); ++i) {
+                addCell(sb, headers.get(i), getColWidth(i, headers.size()));
+            }
+            sb.append(System.lineSeparator());
+            addHR(sb);
+        }
+    }
+
+    private void addCell(final StringBuilder sb, final String cell, final int colWidth) {
+        sb.append(cell);
+        pad(sb, colWidth - cell.length(), ' ');
+    }
+
+    private void addHR(final StringBuilder sb) {
+        for (int i = 0; i < colWidths.size(); i++) {
+            final int colWidth = getColWidth(i, colWidths.size());
+            pad(sb, colWidth, '-');
+        }
+        sb.append(System.lineSeparator());
+    }
+
+    private void updateColWidths(final List<String> cells) {
+        while (colWidths.size() < cells.size()) {
+            colWidths.add(0);
+        }
+        for (int i = 0; i < cells.size(); ++i) {
+            colWidths.set(i,
+                    Math.max(colWidths.get(i),
+                            cells.get(i).length()
+                    )
+            );
+        }
+    }
+
+    private int getColWidth(final int index, final int size) {
         return colWidths.get(index) + (index < size - 1 ? 3 : 0);
     }
 

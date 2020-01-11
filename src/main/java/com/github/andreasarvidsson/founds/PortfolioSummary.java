@@ -19,6 +19,7 @@ public class PortfolioSummary {
     public final List<Pair<Found, Double>> founds;
     public List<Pair<String, Double>> countries, sectors, regions;
     public final Developments developments;
+    private final static String SPACE = "   |   ";
 
     public static PortfolioSummary create(
             final String name,
@@ -61,16 +62,18 @@ public class PortfolioSummary {
 
     public void print() {
         System.out.printf(
-                "\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< %s >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n",
+                "\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+                + " %s "
+                + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n",
                 name
         );
         final Table table = new Table();
 
-        final List<String> titles = new ArrayList();
-        titles.addAll(Arrays.asList("Namn", "Andel (%)", "Avgift (%)", "Kategorier", "Sverige (%W)", "Asien (%W)"));
-        titles.addAll(Developments.DEVELOPMENT_TITLES);
-        table.addRow(titles);
-        table.addHR();
+        table.addHeaders(
+                "Namn", "Andel (%)", "Avgift (%)", "Kategorier",
+                "Sverige (%W)", "Asien (%W)"
+        );
+        table.addHeaders(Developments.DEVELOPMENT_TITLES);
 
         for (final Pair<Found, Double> foundPair : founds) {
             final Found found = foundPair.first();
@@ -111,17 +114,20 @@ public class PortfolioSummary {
         table.print();
 
         table.reset();
-        final String space = "   |   ";
-        table.addRow("Land", "Andel (%)", space, "Region", "Andel (%)", space, "Bransch", "Andel (%)");
+        table.addRow(
+                "Land", "Andel (%)", SPACE,
+                "Region", "Andel (%)", SPACE,
+                "Bransch", "Andel (%)"
+        );
         table.addHR();
         for (int i = 0; i < 10; ++i) {
             table.addRow(Arrays.asList(
                     i < countries.size() ? countries.get(i).first() : "",
                     i < countries.size() ? format(countries.get(i).second()) : "",
-                    space,
+                    SPACE,
                     i < regions.size() ? regions.get(i).first() : "",
                     i < regions.size() ? format(regions.get(i).second()) : "",
-                    space,
+                    SPACE,
                     i < sectors.size() ? sectors.get(i).first() : "",
                     i < sectors.size() ? format(sectors.get(i).second()) : ""
             ));
@@ -149,12 +155,14 @@ public class PortfolioSummary {
 
     public void compare(final PortfolioSummary summary) {
         System.out.printf(
-                "\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< %s vs %s >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n",
+                "\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+                + " %s vs %s "
+                + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n",
                 name, summary.name
         );
         final Table table = new Table();
-        table.addRow("", name, summary.name, "Skillnad");
-        table.addHR();
+
+        table.addHeaders("", name, summary.name, "Skillnad");
         table.addRow(
                 "# Fonder",
                 Integer.toString(founds.size()),
@@ -173,41 +181,64 @@ public class PortfolioSummary {
                 format(summary.avgFee),
                 format(summary.avgFee - avgFee)
         );
+        table.addRow("");
+
+        final List<List<String>> rows = new ArrayList();
+        compareMaps(rows, true, countries, summary.countries);
+        compareMaps(rows, false, regions, summary.regions);
+        addHeaderRow(table, summary, "Land", "Region");
+        rows.forEach(row -> {
+            table.addRow(row);
+        });
+        table.addRow("");
+
+        rows.clear();
+        compareMaps(rows, true, sectors, summary.sectors);
+        compareDevelopments(rows, false, summary);
+        addHeaderRow(table, summary, "Bransch", "Utveckling");
+        rows.forEach(row -> {
+            table.addRow(row);
+        });
         table.print();
-        compareMaps("Land", name, summary.name, countries, summary.countries);
-        compareMaps("Region", name, summary.name, regions, summary.regions);
-        compareMaps("Bransch", name, summary.name, sectors, summary.sectors);
-        compareDevelopments(summary);
     }
 
-    private void compareDevelopments(final PortfolioSummary summary) {
-        final Table table = new Table();
+    private void addHeaderRow(
+            final Table table,
+            final PortfolioSummary summary,
+            final String title1, final String title2) {
         table.addRow(
-                "Utveckling (%)",
+                title1,
+                String.format("%s (%%)", name),
+                String.format("%s (%%)", summary.name),
+                "Skillnad (%)",
+                SPACE,
+                title2,
                 String.format("%s (%%)", name),
                 String.format("%s (%%)", summary.name),
                 "Skillnad (%)"
         );
         table.addHR();
-        Developments.DEVELOPMENT_TITLES.forEach(title -> {
+    }
+
+    private void compareDevelopments(
+            final List<List<String>> rows,
+            final boolean first,
+            final PortfolioSummary summary) {
+        for (int i = 0; i < Developments.DEVELOPMENT_TITLES.size(); ++i) {
+            final String title = Developments.DEVELOPMENT_TITLES.get(i);
             if (developments.has(title) && summary.developments.has(title)) {
-                final double val1 = developments.get(title);
-                final double val2 = summary.developments.get(title);
-                table.addRow(
-                        title,
-                        format(val1),
-                        format(val2),
-                        format(val2 - val1)
+                addRow(
+                        rows, first, i, title,
+                        developments.get(title),
+                        summary.developments.get(title)
                 );
             }
-        });
-        table.print();
+        }
     }
 
     private void compareMaps(
-            final String title1,
-            final String title2,
-            final String title3,
+            final List<List<String>> rows,
+            final boolean first,
             final List<Pair<String, Double>> list1,
             final List<Pair<String, Double>> list2) {
         final Map<String, Comparison> map = new HashMap();
@@ -218,25 +249,40 @@ public class PortfolioSummary {
             addTo(map, p.first(), p.second(), false);
         });
         final List<Comparison> list = new ArrayList(map.values());
-        Collections.sort(list, (a, b) -> Double.compare(Math.abs(b.diff), Math.abs((a.diff))));
-        final Table table = new Table();
-        table.addRow(
-                title1,
-                String.format("%s (%%)", title2),
-                String.format("%s (%%)", title3),
-                "Skillnad (%)"
+        Collections.sort(list, (a, b)
+                -> Double.compare(Math.abs(b.diff), Math.abs((a.diff)))
         );
-        table.addHR();
+
         for (int i = 0; i < list.size() && i < 10; ++i) {
             final Comparison comparison = list.get(i);
-            table.addRow(
-                    comparison.name,
-                    format(comparison.val1),
-                    format(comparison.val2),
-                    format(comparison.diff)
+            addRow(
+                    rows, first, i, comparison.name, comparison.val1, comparison.val2
             );
         }
-        table.print();
+    }
+
+    final void addRow(
+            final List<List<String>> rows,
+            final boolean first,
+            final int i,
+            final String title,
+            final double val1,
+            final double val2) {
+        if (i >= rows.size()) {
+            rows.add(new ArrayList());
+            if (!first) {
+                rows.get(i).addAll(Arrays.asList("", "", "", "", SPACE));
+            }
+        }
+        rows.get(i).addAll(Arrays.asList(
+                title,
+                format(val1),
+                format(val2),
+                format(val2 - val1)
+        ));
+        if (first) {
+            rows.get(i).add(SPACE);
+        }
     }
 
     private void addTo(
