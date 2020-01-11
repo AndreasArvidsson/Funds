@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,26 @@ public abstract class Avanza {
 
     private static final String BASE = "https://www.avanza.se/_cqbe";
     private static final Map<String, Found> FOUNDS = new HashMap();
+
+    public static List<Pair<Found, Double>> getFoundPairs(
+            final List<Pair<String, Double>> foundNames) throws IOException {
+        final List<Pair<Found, Double>> res = new ArrayList();
+        for (final Pair<String, Double> foundNamePair : foundNames) {
+            res.add(new Pair(
+                    getFound(foundNamePair.first()),
+                    foundNamePair.second()
+            ));
+        }
+        return res;
+    }
+
+    public static List<Found> getFounds(final List<String> foundNames) throws IOException {
+        final List<Found> res = new ArrayList();
+        for (final String foundName : foundNames) {
+            res.add(getFound(foundName));
+        }
+        return res;
+    }
 
     public static Found getFound(final String name) throws IOException {
         if (!FOUNDS.containsKey(name)) {

@@ -1,5 +1,6 @@
 package com.github.andreasarvidsson.founds;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,12 +25,18 @@ public class Rankings {
     private final List<FoundRank> list = new ArrayList();
     private final Map<Found, FoundRank> map = new HashMap();
 
+    public static Rankings create(final List<String> foundNames) throws IOException {
+        return new Rankings(
+                Avanza.getFounds(foundNames)
+        );
+    }
+
     public Rankings(final List<Found> founds) {
-        for (final Found found : founds) {
+        founds.forEach(found -> {
             final FoundRank fr = new FoundRank(found);
             list.add(fr);
             map.put(fr.found, fr);
-        }
+        });
         final List<Pair<Found, Double>> fees = getFees(founds);
         addValues(fees);
         for (int i = 0; i < 4; ++i) {

@@ -20,6 +20,15 @@ public class PortfolioSummary {
     public List<Pair<String, Double>> countries, sectors, regions;
     public final Developments developments;
 
+    public static PortfolioSummary create(
+            final String name,
+            final List<Pair<String, Double>> foundNames) throws IOException {
+        return new PortfolioSummary(
+                name,
+                Avanza.getFoundPairs(foundNames)
+        );
+    }
+
     public PortfolioSummary(
             final String name,
             final List<Pair<Found, Double>> founds) throws IOException {
