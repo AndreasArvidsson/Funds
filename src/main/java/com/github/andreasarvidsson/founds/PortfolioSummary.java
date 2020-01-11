@@ -140,7 +140,7 @@ public class PortfolioSummary {
             final double percentage,
             final String regionName) {
         final double value = found.getRegion(regionName);
-        return String.format("%.2f", value * percentage);
+        return String.format("%.2f", value * percentage / percentageSum);
     }
 
     private String getRegion(
