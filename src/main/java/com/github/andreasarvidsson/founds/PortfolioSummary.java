@@ -1,15 +1,13 @@
 package com.github.andreasarvidsson.founds;
 
 import com.github.andreasarvidsson.founds.util.BaseUtil;
-import com.github.andreasarvidsson.founds.util.Pair;
+import com.github.andreasarvidsson.founds.util.Comparison;
 import com.github.andreasarvidsson.founds.util.Table;
+import com.github.andreasarvidsson.founds.util.Values;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -20,11 +18,12 @@ public class PortfolioSummary extends BaseUtil {
     private final static String SPACE = "   |   ";
     private final String name;
     private final List<FoundData> founds;
-    private final List<Pair<String, Double>> countries, sectors, regions;
     private final Developments developments;
     private double percentageSum, avgFee;
-    public Double largeCompanies, middleCompanies, smallCompanies,
-            sweLargeCompanies, sweMiddleCompanies, sweSmallCompanies;
+    final Values companiesSize = new Values();
+    final Values countries = new Values();
+    final Values sectors = new Values();
+    final Values regions = new Values();
 
     public static PortfolioSummary create(
             final String name,
@@ -64,38 +63,32 @@ public class PortfolioSummary extends BaseUtil {
         this.name = name;
         this.founds = founds;
         developments = new Developments(founds);
-        final Map<String, Double> countriesMap = new HashMap();
-        final Map<String, Double> sectorsMap = new HashMap();
-        final Map<String, Double> regionsMap = new HashMap();
         for (final FoundData fd : founds) {
             percentageSum += fd.percentage * 100;
             avgFee += fd.avanza.productFee * fd.percentageNormalized;
             fd.avanza.countryChartData.forEach(data -> {
-                addToMap(countriesMap, data.name, data.y * fd.percentageNormalized);
+                countries.add(data.name, data.y * fd.percentageNormalized);
             });
             fd.avanza.regionChartData.forEach(data -> {
-                addToMap(regionsMap, data.name, data.y * fd.percentageNormalized);
+                regions.add(data.name, data.y * fd.percentageNormalized);
             });
             fd.avanza.sectorChartData.forEach(data -> {
-                addToMap(sectorsMap, data.name, data.y * fd.percentageNormalized);
+                sectors.add(data.name, data.y * fd.percentageNormalized);
             });
             if (fd.morningstar != null) {
-                if (largeCompanies == null) {
-                    largeCompanies = middleCompanies = smallCompanies = 0.0;
-                    sweLargeCompanies = sweMiddleCompanies = sweSmallCompanies = 0.0;
-                }
-                largeCompanies += fd.morningstar.largeCompanies * fd.percentageNormalized;
-                middleCompanies += fd.morningstar.middleCompanies * fd.percentageNormalized;
-                smallCompanies += fd.morningstar.smallCompanies * fd.percentageNormalized;
+                companiesSize.add("Stora bolag", fd.morningstar.largeCompanies * fd.percentageNormalized);
+                companiesSize.add("Medelstora bolag", fd.morningstar.middleCompanies * fd.percentageNormalized);
+                companiesSize.add("Små bolag", fd.morningstar.smallCompanies * fd.percentageNormalized);
                 final double swePercentage = fd.avanza.getRegion(Regions.SWEDEN) / 100;
-                sweLargeCompanies += fd.morningstar.largeCompanies * fd.percentageNormalized * swePercentage;
-                sweMiddleCompanies += fd.morningstar.middleCompanies * fd.percentageNormalized * swePercentage;
-                sweSmallCompanies += fd.morningstar.smallCompanies * fd.percentageNormalized * swePercentage;
+                companiesSize.add("Stora svenska bolag", fd.morningstar.largeCompanies * fd.percentageNormalized * swePercentage);
+                companiesSize.add("Medelstora svenska bolag", fd.morningstar.middleCompanies * fd.percentageNormalized * swePercentage);
+                companiesSize.add("Små svenska bolag", fd.morningstar.smallCompanies * fd.percentageNormalized * swePercentage);
             }
         }
-        countries = toList(countriesMap);
-        regions = toList(regionsMap);
-        sectors = toList(sectorsMap);
+        countries.compile(true);
+        regions.compile(true);
+        sectors.compile(true);
+        companiesSize.compile();
     }
 
     public void print() {
@@ -119,7 +112,7 @@ public class PortfolioSummary extends BaseUtil {
                 "Namn", "Andel (%)", "Avgift (%)", "Kategorier",
                 "Sverige (%)", "Asien (%)"
         ));
-        if (largeCompanies != null) {
+        if (!companiesSize.isEmpty()) {
             headers.addAll(Arrays.asList(
                     "Stora (%)", "Medelstora (%)", "Små (%)"
             ));
@@ -145,7 +138,7 @@ public class PortfolioSummary extends BaseUtil {
                     format(fd.avanza.getRegion(Regions.SWEDEN)),
                     format(fd.avanza.getRegion(Regions.ASIA))
             ));
-            if (largeCompanies != null) {
+            if (!companiesSize.isEmpty()) {
                 if (fd.morningstar != null) {
                     row.addAll(Arrays.asList(
                             format(fd.morningstar.largeCompanies),
@@ -173,14 +166,14 @@ public class PortfolioSummary extends BaseUtil {
                 format(percentageSum),
                 format(avgFee),
                 "",
-                getRegion(Regions.SWEDEN),
-                getRegion(Regions.ASIA)
+                format(regions.get(Regions.SWEDEN)),
+                format(regions.get(Regions.ASIA))
         ));
-        if (largeCompanies != null) {
+        if (!companiesSize.isEmpty()) {
             row.addAll(Arrays.asList(
-                    format(largeCompanies),
-                    format(middleCompanies),
-                    format(smallCompanies)
+                    format(companiesSize.get(0).second()),
+                    format(companiesSize.get(1).second()),
+                    format(companiesSize.get(2).second())
             ));
         }
         Developments.DEVELOPMENT_TITLES.forEach(title -> {
@@ -199,25 +192,16 @@ public class PortfolioSummary extends BaseUtil {
                 "Region", "Andel (%)", SPACE,
                 "Bransch", "Andel (%)"
         ));
-        List<Pair<String, Double>> sizeList = new ArrayList();
-        if (largeCompanies != null) {
+        if (!companiesSize.isEmpty()) {
             row.addAll(Arrays.asList(
                     SPACE, "Storlek", "Andel (%)"
             ));
-            sizeList = Arrays.asList(
-                    new Pair("Stora bolag", largeCompanies),
-                    new Pair("Medelstora bolag", middleCompanies),
-                    new Pair("Små bolag", smallCompanies),
-                    new Pair("Stora svenska bolag", sweLargeCompanies),
-                    new Pair("Medelstora svenska bolag", sweMiddleCompanies),
-                    new Pair("Små svenska bolag", sweSmallCompanies)
-            );
         }
         table.addRow(row);
         table.addHR();
         final int size = Math.min(
                 10,
-                max(countries.size(), regions.size(), sectors.size(), sizeList.size())
+                max(countries.size(), regions.size(), sectors.size(), companiesSize.size())
         );
         for (int i = 0; i < size; ++i) {
             row.clear();
@@ -231,26 +215,16 @@ public class PortfolioSummary extends BaseUtil {
                     i < sectors.size() ? sectors.get(i).first() : "",
                     i < sectors.size() ? format(sectors.get(i).second()) : ""
             ));
-            if (!sizeList.isEmpty()) {
+            if (!companiesSize.isEmpty()) {
                 row.addAll(Arrays.asList(
                         SPACE,
-                        i < sizeList.size() ? sizeList.get(i).first() : "",
-                        i < sizeList.size() ? format(sizeList.get(i).second()) : ""
+                        i < companiesSize.size() ? companiesSize.get(i).first() : "",
+                        i < companiesSize.size() ? format(companiesSize.get(i).second()) : ""
                 ));
             }
             table.addRow(row);
         }
         table.print();
-    }
-
-    private String getRegion(
-            final String regionName) {
-        for (final Pair<String, Double> pair : regions) {
-            if (regionName.equals(pair.first())) {
-                return format(pair.second());
-            }
-        }
-        return "-";
     }
 
     public void compare(final PortfolioSummary summary) {
@@ -284,32 +258,14 @@ public class PortfolioSummary extends BaseUtil {
         addRow(
                 rows, true, 2, "Avgift (%)", avgFee, summary.avgFee
         );
-        if (largeCompanies != null && summary.largeCompanies != null) {
+        if (!companiesSize.isEmpty() && !summary.companiesSize.isEmpty()) {
             headers.addAll(Arrays.asList(
                     "Storlek",
                     String.format("%s (%%)", name),
                     String.format("%s (%%)", summary.name),
                     "Skillnad (%)"
             ));
-            int i = 0;
-            addRow(
-                    rows, false, i++, "Stora bolag", largeCompanies, summary.largeCompanies
-            );
-            addRow(
-                    rows, false, i++, "Medelstora bolag", middleCompanies, summary.middleCompanies
-            );
-            addRow(
-                    rows, false, i++, "Små bolag", smallCompanies, summary.smallCompanies
-            );
-            addRow(
-                    rows, false, i++, "Stora svenska bolag", sweLargeCompanies, summary.sweLargeCompanies
-            );
-            addRow(
-                    rows, false, i++, "Medelstora svenska bolag", sweMiddleCompanies, summary.sweMiddleCompanies
-            );
-            addRow(
-                    rows, false, i++, "Små svenska bolag", sweSmallCompanies, summary.sweSmallCompanies
-            );
+            compareValues(rows, false, companiesSize, summary.companiesSize);
         }
         table.addRow(headers);
         table.addHR();
@@ -321,8 +277,8 @@ public class PortfolioSummary extends BaseUtil {
 
     private void addChartCompareTables(final PortfolioSummary summary, final Table table) {
         final List<List<String>> rows = new ArrayList();
-        compareMaps(rows, true, countries, summary.countries);
-        compareMaps(rows, false, regions, summary.regions);
+        compareValues(rows, true, countries, summary.countries);
+        compareValues(rows, false, regions, summary.regions);
         addHeaderRow(table, summary, "Land", "Region");
         rows.forEach(row -> {
             table.addRow(row);
@@ -330,7 +286,7 @@ public class PortfolioSummary extends BaseUtil {
         table.addRow("");
 
         rows.clear();
-        compareMaps(rows, true, sectors, summary.sectors);
+        compareValues(rows, true, sectors, summary.sectors);
         compareDevelopments(rows, false, summary);
         addHeaderRow(table, summary, "Bransch", "Utveckling");
         rows.forEach(row -> {
@@ -372,26 +328,23 @@ public class PortfolioSummary extends BaseUtil {
         }
     }
 
-    private void compareMaps(
+    private void compareValues(
             final List<List<String>> rows,
             final boolean first,
-            final List<Pair<String, Double>> list1,
-            final List<Pair<String, Double>> list2) {
-        final Map<String, Comparison> map = new HashMap();
-        list1.forEach(p -> {
-            addTo(map, p.first(), p.second(), true);
+            final Values values1,
+            final Values values2) {
+        final Comparison comparison = new Comparison();
+        values1.forEach(p -> {
+            comparison.putFirst(p.first(), p.second());
         });
-        list2.forEach(p -> {
-            addTo(map, p.first(), p.second(), false);
+        values2.forEach(p -> {
+            comparison.putSecond(p.first(), p.second());
         });
-        final List<Comparison> list = new ArrayList(map.values());
-        Collections.sort(list, (a, b)
-                -> Double.compare(Math.abs(b.diff), Math.abs((a.diff)))
-        );
-        for (int i = 0; i < list.size() && i < 10; ++i) {
-            final Comparison comparison = list.get(i);
+        comparison.compile();
+        for (int i = 0; i < comparison.size() && i < 10; ++i) {
+            final String key = comparison.get(i);
             addRow(
-                    rows, first, i, comparison.name, comparison.val1, comparison.val2
+                    rows, first, i, key, comparison.first(key), comparison.second(key)
             );
         }
     }
@@ -418,52 +371,6 @@ public class PortfolioSummary extends BaseUtil {
         if (first) {
             rows.get(i).add(SPACE);
         }
-    }
-
-    private void addTo(
-            final Map<String, Comparison> map,
-            final String name,
-            final double value,
-            final boolean first) {
-        map.putIfAbsent(name, new Comparison(name));
-        final Comparison comparison = map.get(name);
-        if (first) {
-            comparison.val1 += value;
-        }
-        else {
-            comparison.val2 += value;
-        }
-        comparison.diff = comparison.val2 - comparison.val1;
-    }
-
-    private void addToMap(
-            final Map<String, Double> map,
-            final String key, final double value) {
-        if (!map.containsKey(key)) {
-            map.put(key, 0.0);
-        }
-        map.put(key, map.get(key) + value);
-    }
-
-    private List<Pair<String, Double>> toList(final Map<String, Double> map) {
-        final List<Pair<String, Double>> res = new ArrayList();
-        map.entrySet().forEach(e -> {
-            res.add(new Pair(e.getKey(), e.getValue()));
-        });
-        Collections.sort(res, (a, b) -> Double.compare(b.second(), a.second()));
-        return res;
-    }
-
-}
-
-class Comparison {
-
-    public final String name;
-    public Double val1, val2, diff;
-
-    public Comparison(final String name) {
-        this.name = name;
-        val1 = val2 = 0.0;
     }
 
 }
