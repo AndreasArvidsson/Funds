@@ -2,6 +2,7 @@ package com.github.andreasarvidsson.founds;
 
 import com.github.andreasarvidsson.founds.util.HTTP;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.github.andreasarvidsson.founds.util.FileCache;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -46,10 +47,16 @@ public abstract class Avanza {
 
     private static AvanzaFound getFoundInner(final String name) throws IOException {
         if (!FOUNDS.containsKey(name)) {
-            final String id = getId(name);
-            final AvanzaFound found = HTTP.get(String.format("%s/fund/guide/%s", BASE, id),
-                    AvanzaFound.class
+            final String fileName = String.format("avanza_%s", name);
+            AvanzaFound found = FileCache.load(fileName, AvanzaFound.class
             );
+            if (found == null) {
+                final String id = getId(name);
+                found = HTTP.get(String.format("%s/fund/guide/%s", BASE, id),
+                        AvanzaFound.class
+                );
+                FileCache.store(fileName, found);
+            }
             FOUNDS.put(name, found);
         }
         return FOUNDS.get(name);

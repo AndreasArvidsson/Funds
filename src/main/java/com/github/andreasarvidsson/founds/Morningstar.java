@@ -2,6 +2,7 @@ package com.github.andreasarvidsson.founds;
 
 import com.github.andreasarvidsson.founds.util.HTTP;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.github.andreasarvidsson.founds.util.FileCache;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -39,15 +40,20 @@ public abstract class Morningstar {
 
     private static MorningstarFound getFoundInner(final String name) throws IOException {
         if (!FOUNDS.containsKey(name)) {
-            final String id = getId(name);
-            final Document doc = HTTP.getDocument(String.format(
-                    "%s/Funds/Quicktake/Portfolio.aspx?perfid=%s",
-                    BASE, id
-            ));
-            final MorningstarFound found = new MorningstarFound();
-            found.largeCompanies = getCompanySize(doc, "Stora bolag");
-            found.middleCompanies = getCompanySize(doc, "Medelstora bolag");
-            found.smallCompanies = getCompanySize(doc, "Små bolag");
+            final String fileName = String.format("morningstar_%s", name);
+            MorningstarFound found = FileCache.load(fileName, MorningstarFound.class);
+            if (found == null) {
+                final String id = getId(name);
+                final Document doc = HTTP.getDocument(String.format(
+                        "%s/Funds/Quicktake/Portfolio.aspx?perfid=%s",
+                        BASE, id
+                ));
+                found = new MorningstarFound();
+                found.largeCompanies = getCompanySize(doc, "Stora bolag");
+                found.middleCompanies = getCompanySize(doc, "Medelstora bolag");
+                found.smallCompanies = getCompanySize(doc, "Små bolag");
+                FileCache.store(fileName, found);
+            }
             FOUNDS.put(name, found);
         }
         return FOUNDS.get(name);
