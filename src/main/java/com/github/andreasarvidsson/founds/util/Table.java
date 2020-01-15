@@ -1,4 +1,4 @@
-package com.github.andreasarvidsson.founds;
+package com.github.andreasarvidsson.founds.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,24 +10,12 @@ import java.util.List;
  */
 public class Table {
 
-    private final List<String> headers = new ArrayList();
     private final List<Row> rows = new ArrayList();
     private final List<Integer> colWidths = new ArrayList();
 
     public void reset() {
-        headers.clear();
         rows.clear();
         colWidths.clear();
-    }
-
-    public Table addHeaders(final String... headers) {
-        return addHeaders(Arrays.asList(headers));
-    }
-
-    public Table addHeaders(final List<String> headers) {
-        this.headers.addAll(headers);
-        updateColWidths(this.headers);
-        return this;
     }
 
     public Table addRow(final List<String> cells) {
@@ -52,7 +40,6 @@ public class Table {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        addHeaders(sb);
         rows.forEach(row -> {
             if (row.hr) {
                 addHR(sb);
@@ -65,16 +52,6 @@ public class Table {
             }
         });
         return sb.toString();
-    }
-
-    private void addHeaders(final StringBuilder sb) {
-        if (!headers.isEmpty()) {
-            for (int i = 0; i < headers.size(); ++i) {
-                addCell(sb, headers.get(i), getColWidth(i, headers.size()));
-            }
-            sb.append(System.lineSeparator());
-            addHR(sb);
-        }
     }
 
     private void addCell(final StringBuilder sb, final String cell, final int colWidth) {
@@ -121,7 +98,7 @@ class Row {
     public final boolean hr;
 
     public Row(final List<String> cells) {
-        this.cells = cells;
+        this.cells = new ArrayList(cells);
         this.hr = false;
     }
 

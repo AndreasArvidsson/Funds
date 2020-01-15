@@ -1,6 +1,7 @@
 package com.github.andreasarvidsson.founds;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,7 +13,7 @@ import java.util.Map;
  * @author Andreas Arvidsson
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Found {
+public class AvanzaFound {
 
     public String name;
     public double productFee;
@@ -45,6 +46,15 @@ public class Found {
             return regionsMap.get(regionName).y;
         }
         return 0.0;
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class ChartData {
+
+        public String name, type, currency, countryCode;
+        public Double y;
+
     }
 
 }

@@ -1,5 +1,6 @@
 package com.github.andreasarvidsson.founds;
 
+import com.github.andreasarvidsson.founds.util.HTTP;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -17,34 +18,37 @@ import java.util.NoSuchElementException;
 public abstract class Avanza {
 
     private static final String BASE = "https://www.avanza.se/_cqbe";
-    private static final Map<String, Found> FOUNDS = new HashMap();
+    private static final Map<String, AvanzaFound> FOUNDS = new HashMap();
 
-    public static List<Pair<Found, Double>> getFoundPairs(
-            final List<Pair<String, Double>> foundNames) throws IOException {
-        final List<Pair<Found, Double>> res = new ArrayList();
-        for (final Pair<String, Double> foundNamePair : foundNames) {
-            res.add(new Pair(
-                    getFound(foundNamePair.first()),
-                    foundNamePair.second()
-            ));
-        }
-        return res;
-    }
-
-    public static List<Found> getFounds(final List<String> foundNames) throws IOException {
-        final List<Found> res = new ArrayList();
+    public static List<AvanzaFound> getFounds(final List<String> foundNames) throws IOException {
+        final List<AvanzaFound> res = new ArrayList();
         for (final String foundName : foundNames) {
             res.add(getFound(foundName));
         }
         return res;
     }
 
-    public static Found getFound(final String name) throws IOException {
+    public static AvanzaFound getFound(final String name, final String... alternativeNames) throws IOException {
+        try {
+            return getFoundInner(name);
+        }
+        catch (final NoSuchElementException e) {
+        }
+        for (int i = 0; i < alternativeNames.length; ++i) {
+            try {
+                return getFoundInner(alternativeNames[i]);
+            }
+            catch (final NoSuchElementException e) {
+            }
+        }
+        throw new NoSuchElementException(String.format("Can't find Avanza found '%s'", name));
+    }
+
+    private static AvanzaFound getFoundInner(final String name) throws IOException {
         if (!FOUNDS.containsKey(name)) {
             final String id = getId(name);
-            final Found found = HTTP.get(
-                    String.format("%s/fund/guide/%s", BASE, id),
-                    Found.class
+            final AvanzaFound found = HTTP.get(String.format("%s/fund/guide/%s", BASE, id),
+                    AvanzaFound.class
             );
             FOUNDS.put(name, found);
         }
@@ -67,7 +71,7 @@ public abstract class Avanza {
                 }
             }
         }
-        throw new NoSuchElementException(String.format("Can't find ID for '%s'", name));
+        throw new NoSuchElementException();
     }
 
 }

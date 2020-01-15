@@ -1,4 +1,4 @@
-package com.github.andreasarvidsson.founds;
+package com.github.andreasarvidsson.founds.util;
 
 /**
  *
