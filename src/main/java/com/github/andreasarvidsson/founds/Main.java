@@ -40,7 +40,7 @@ public class Main {
                 new SelectedFound(5, "SEB Teknologifond"),
                 new SelectedFound(5, "Skandia Time Global"),
                 new SelectedFound(5, "Lannebo Teknik")
-        ), false);
+        ), inclMorningstar);
 
         rikaTillsammans.print();
         pension.print();
