@@ -119,30 +119,28 @@ public class PortfolioSummary extends BaseUtil {
     }
 
     private void addHeaders(final Table table) {
-        final List<String> headers = new ArrayList();
-        headers.addAll(Arrays.asList(
+        table.addRow(0,
                 "Namn", "Andel (%)", "Avgift (%)", "Risk", Headers.SHARP_RATIO,
                 "Kategorier", "Sverige (%)", "Asien (%)"
-        ));
+        );
         if (!companiesSize.isEmpty()) {
-            headers.addAll(Arrays.asList(
+            table.addRow(0,
                     "Stora (%)", "Medelstora (%)", "Små (%)"
-            ));
+            );
         }
         Headers.DEVELOPMENT_TITLES.forEach(title -> {
             if (developments.has(title)) {
-                headers.add(title);
+                table.addRow(0, title);
             }
         });
-        table.addRow(headers);
         table.addHR();
     }
 
     private void addFounds(final Table table) {
         founds.forEach(fd -> {
             final AvanzaFound found = fd.avanza;
-            final List<String> row = new ArrayList();
-            row.addAll(Arrays.asList(
+            final int rowIndex = table.numRows();
+            table.addRow(rowIndex,
                     found.name,
                     format(fd.percentage * 100),
                     format(found.productFee),
@@ -151,35 +149,34 @@ public class PortfolioSummary extends BaseUtil {
                     String.join(", ", found.categories),
                     format(fd.avanza.getRegion(Regions.SWEDEN)),
                     format(fd.avanza.getRegion(Regions.ASIA))
-            ));
+            );
             if (!companiesSize.isEmpty()) {
                 if (fd.morningstar != null) {
-                    row.addAll(Arrays.asList(
+                    table.addRow(rowIndex,
                             format(fd.morningstar.largeCompanies),
                             format(fd.morningstar.middleCompanies),
                             format(fd.morningstar.smallCompanies)
-                    ));
+                    );
                 }
                 else {
-                    row.addAll(Arrays.asList("", "", ""));
+                    table.addRow(rowIndex, "", "", "");
                 }
             }
             Headers.DEVELOPMENT_TITLES.forEach(key -> {
                 if (found.hasDevelopment(key)) {
-                    row.add(format(found.getDevelopment(key)));
+                    table.addRow(rowIndex, format(found.getDevelopment(key)));
                 }
                 else {
-                    row.add("-");
+                    table.addRow(rowIndex, "-");
                 }
             });
-            table.addRow(row);
         });
         table.addHR();
     }
 
     private void addSum(final Table table) {
-        final List<String> row = new ArrayList();
-        row.addAll(Arrays.asList(
+        final int rowIndex = table.numRows();
+        table.addRow(rowIndex,
                 "",
                 format(percentageSum),
                 format(avgFee),
@@ -188,44 +185,41 @@ public class PortfolioSummary extends BaseUtil {
                 "",
                 format(regions.get(Regions.SWEDEN)),
                 format(regions.get(Regions.ASIA))
-        ));
+        );
         if (!companiesSize.isEmpty()) {
-            row.addAll(Arrays.asList(
+            table.addRow(rowIndex,
                     format(companiesSize.get(0).second()),
                     format(companiesSize.get(1).second()),
                     format(companiesSize.get(2).second())
-            ));
+            );
         }
         Headers.DEVELOPMENT_TITLES.forEach(title -> {
             if (developments.has(title)) {
-                row.add(format(developments.get(title)));
+                table.addRow(rowIndex, format(developments.get(title)));
             }
         });
-        table.addRow(row);
     }
 
     private void printChartTable() {
         final Table table = new Table();
-        final List<String> row = new ArrayList();
-        row.addAll(Arrays.asList(
+        table.addRow(0,
                 "Land", "Andel (%)", SPACE,
                 "Region", "Andel (%)", SPACE,
                 "Bransch", "Andel (%)"
-        ));
+        );
         if (!companiesSize.isEmpty()) {
-            row.addAll(Arrays.asList(
+            table.addRow(0,
                     SPACE, "Storlek", "Andel (%)"
-            ));
+            );
         }
-        table.addRow(row);
         table.addHR();
         final int size = Math.min(
                 10,
                 max(countries.size(), regions.size(), sectors.size(), companiesSize.size())
         );
         for (int i = 0; i < size; ++i) {
-            row.clear();
-            row.addAll(Arrays.asList(
+            final int rowIndex = table.numRows();
+            table.addRow(rowIndex,
                     i < countries.size() ? countries.get(i).first() : "",
                     i < countries.size() ? format(countries.get(i).second()) : "",
                     SPACE,
@@ -234,15 +228,14 @@ public class PortfolioSummary extends BaseUtil {
                     SPACE,
                     i < sectors.size() ? sectors.get(i).first() : "",
                     i < sectors.size() ? format(sectors.get(i).second()) : ""
-            ));
+            );
             if (!companiesSize.isEmpty()) {
-                row.addAll(Arrays.asList(
+                table.addRow(rowIndex,
                         SPACE,
                         i < companiesSize.size() ? companiesSize.get(i).first() : "",
                         i < companiesSize.size() ? format(companiesSize.get(i).second()) : ""
-                ));
+                );
             }
-            table.addRow(row);
         }
         table.print();
     }

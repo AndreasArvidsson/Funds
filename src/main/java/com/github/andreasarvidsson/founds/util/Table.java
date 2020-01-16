@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class Table {
 
+    private final static int CELL_SPACING = 3;
     private final List<Row> rows = new ArrayList();
     private final List<Integer> colWidths = new ArrayList();
 
@@ -19,18 +20,34 @@ public class Table {
     }
 
     public Table addRow(final List<String> cells) {
-        rows.add(new Row(cells));
-        updateColWidths(cells);
-        return this;
+        return addRow(rows.size(), cells);
     }
 
-    public Table addRow(final String... row) {
-        return addRow(Arrays.asList(row));
+    public Table addRow(final String... cells) {
+        return addRow(rows.size(), Arrays.asList(cells));
+    }
+
+    public Table addRow(final int rowIndex, final String... cells) {
+        return addRow(rowIndex, Arrays.asList(cells));
+    }
+
+    public Table addRow(final int rowIndex, final List<String> cells) {
+        while (rows.size() <= rowIndex) {
+            rows.add(new Row());
+        }
+        int colIndex = rows.get(rowIndex).cells.size();
+        rows.get(rowIndex).cells.addAll(cells);
+        updateColWidths(colIndex, rows.get(rowIndex).cells);
+        return this;
     }
 
     public Table addHR() {
         rows.add(new Row(true));
         return this;
+    }
+
+    public int numRows() {
+        return rows.size();
     }
 
     public void print() {
@@ -67,26 +84,28 @@ public class Table {
         sb.append(System.lineSeparator());
     }
 
-    private void updateColWidths(final List<String> cells) {
+    private void updateColWidths(int colIndex, final List<String> cells) {
         while (colWidths.size() < cells.size()) {
             colWidths.add(0);
         }
-        for (int i = 0; i < cells.size(); ++i) {
-            colWidths.set(i,
-                    Math.max(colWidths.get(i),
-                            cells.get(i).length()
+        while (colIndex < cells.size()) {
+            colWidths.set(colIndex,
+                    Math.max(colWidths.get(colIndex),
+                            cells.get(colIndex).length()
                     )
             );
+            ++colIndex;
         }
     }
 
     private int getColWidth(final int index, final int size) {
-        return colWidths.get(index) + (index < size - 1 ? 3 : 0);
+        return colWidths.get(index) + (index < size - 1 ? CELL_SPACING : 0);
     }
 
-    private void pad(final StringBuilder sb, final int colWidth, final char character) {
-        for (int i = 0; i < colWidth; ++i) {
+    private void pad(final StringBuilder sb, int colWidth, final char character) {
+        while (colWidth > 0) {
             sb.append(character);
+            --colWidth;
         }
     }
 
@@ -97,8 +116,8 @@ class Row {
     public final List<String> cells;
     public final boolean hr;
 
-    public Row(final List<String> cells) {
-        this.cells = new ArrayList(cells);
+    public Row() {
+        this.cells = new ArrayList();
         this.hr = false;
     }
 
