@@ -19,7 +19,8 @@ public class AvanzaFound {
     public double productFee;
     public Double developmentOneDay, developmentOneMonth, developmentThreeMonths,
             developmentSixMonths, developmentThisYear, developmentOneYear,
-            developmentThreeYears, developmentFiveYears;
+            developmentThreeYears, developmentFiveYears, sharpeRatio;
+    public int risk;
     public List<String> categories;
     public List<ChartData> countryChartData, holdingChartData,
             sectorChartData, regionChartData;

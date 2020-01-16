@@ -19,7 +19,7 @@ public class PortfolioSummary extends BaseUtil {
     private final String name;
     private final List<FoundData> founds;
     private final Developments developments;
-    private double percentageSum, avgFee;
+    private double percentageSum, avgFee, risk, sharpeRatio;
     final Values companiesSize = new Values();
     final Values countries = new Values();
     final Values sectors = new Values();
@@ -66,6 +66,8 @@ public class PortfolioSummary extends BaseUtil {
         for (final FoundData fd : founds) {
             percentageSum += fd.percentage * 100;
             avgFee += fd.avanza.productFee * fd.percentageNormalized;
+            risk += fd.avanza.risk * fd.percentageNormalized;
+            sharpeRatio += fd.avanza.sharpeRatio != null ? fd.avanza.sharpeRatio : 0.0;
             fd.avanza.countryChartData.forEach(data -> {
                 countries.add(data.name, data.y * fd.percentageNormalized);
             });
@@ -109,8 +111,8 @@ public class PortfolioSummary extends BaseUtil {
     private void addHeaders(final Table table) {
         final List<String> headers = new ArrayList();
         headers.addAll(Arrays.asList(
-                "Namn", "Andel (%)", "Avgift (%)", "Kategorier",
-                "Sverige (%)", "Asien (%)"
+                "Namn", "Andel (%)", "Avgift (%)", "Risk", "Sharpekvot",
+                "Kategorier", "Sverige (%)", "Asien (%)"
         ));
         if (!companiesSize.isEmpty()) {
             headers.addAll(Arrays.asList(
@@ -134,6 +136,8 @@ public class PortfolioSummary extends BaseUtil {
                     found.name,
                     format(fd.percentage * 100),
                     format(found.productFee),
+                    Integer.toString(found.risk),
+                    found.sharpeRatio != null ? format(found.sharpeRatio) : "-",
                     String.join(", ", found.categories),
                     format(fd.avanza.getRegion(Regions.SWEDEN)),
                     format(fd.avanza.getRegion(Regions.ASIA))
@@ -165,7 +169,8 @@ public class PortfolioSummary extends BaseUtil {
                 "",
                 format(percentageSum),
                 format(avgFee),
-                "",
+                format(risk),
+                "", "",
                 format(regions.get(Regions.SWEDEN)),
                 format(regions.get(Regions.ASIA))
         ));
@@ -257,6 +262,9 @@ public class PortfolioSummary extends BaseUtil {
         );
         addRow(
                 rows, true, 2, "Avgift (%)", avgFee, summary.avgFee
+        );
+        addRow(
+                rows, true, 3, "Risk", risk, summary.risk
         );
         if (!companiesSize.isEmpty() && !summary.companiesSize.isEmpty()) {
             headers.addAll(Arrays.asList(
