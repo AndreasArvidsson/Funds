@@ -2,6 +2,7 @@ package com.github.andreasarvidsson.founds;
 
 import com.github.andreasarvidsson.founds.util.BaseUtil;
 import com.github.andreasarvidsson.founds.util.Comparison;
+import com.github.andreasarvidsson.founds.util.Sum;
 import com.github.andreasarvidsson.founds.util.Table;
 import com.github.andreasarvidsson.founds.util.Values;
 import java.io.IOException;
@@ -18,12 +19,13 @@ public class PortfolioSummary extends BaseUtil {
     private final static String SPACE = "   |   ";
     private final String name;
     private final List<FoundData> founds;
-    private final Developments developments;
-    private double percentageSum, avgFee, risk, sharpeRatio;
+    private double percentageSum, avgFee, risk;
     final Values companiesSize = new Values();
     final Values countries = new Values();
     final Values sectors = new Values();
     final Values regions = new Values();
+    final Sum sum = new Sum();
+    final Sum developments = new Sum();
 
     public static PortfolioSummary create(
             final String name,
@@ -62,12 +64,18 @@ public class PortfolioSummary extends BaseUtil {
             final List<FoundData> founds) throws IOException {
         this.name = name;
         this.founds = founds;
-        developments = new Developments(founds);
         for (final FoundData fd : founds) {
             percentageSum += fd.percentage * 100;
             avgFee += fd.avanza.productFee * fd.percentageNormalized;
             risk += fd.avanza.risk * fd.percentageNormalized;
-            sharpeRatio += fd.avanza.sharpeRatio != null ? fd.avanza.sharpeRatio : 0.0;
+            if (fd.avanza.sharpeRatio != null) {
+                sum.add(Headers.SHARP_RATIO, fd.avanza.sharpeRatio, fd.percentageNormalized);
+            }
+            Headers.DEVELOPMENT_TITLES.forEach(key -> {
+                if (fd.avanza.hasDevelopment(key)) {
+                    developments.add(key, fd.avanza.getDevelopment(key), fd.percentageNormalized);
+                }
+            });
             fd.avanza.countryChartData.forEach(data -> {
                 countries.add(data.name, data.y * fd.percentageNormalized);
             });
@@ -91,6 +99,8 @@ public class PortfolioSummary extends BaseUtil {
         regions.compile(true);
         sectors.compile(true);
         companiesSize.compile();
+        sum.compile();
+        developments.compile();
     }
 
     public void print() {
@@ -111,7 +121,7 @@ public class PortfolioSummary extends BaseUtil {
     private void addHeaders(final Table table) {
         final List<String> headers = new ArrayList();
         headers.addAll(Arrays.asList(
-                "Namn", "Andel (%)", "Avgift (%)", "Risk", "Sharpekvot",
+                "Namn", "Andel (%)", "Avgift (%)", "Risk", Headers.SHARP_RATIO,
                 "Kategorier", "Sverige (%)", "Asien (%)"
         ));
         if (!companiesSize.isEmpty()) {
@@ -119,8 +129,8 @@ public class PortfolioSummary extends BaseUtil {
                     "Stora (%)", "Medelstora (%)", "Små (%)"
             ));
         }
-        Developments.DEVELOPMENT_TITLES.forEach(title -> {
-            if (developments.showHeader(title)) {
+        Headers.DEVELOPMENT_TITLES.forEach(title -> {
+            if (developments.has(title)) {
                 headers.add(title);
             }
         });
@@ -129,7 +139,7 @@ public class PortfolioSummary extends BaseUtil {
     }
 
     private void addFounds(final Table table) {
-        for (final FoundData fd : founds) {
+        founds.forEach(fd -> {
             final AvanzaFound found = fd.avanza;
             final List<String> row = new ArrayList();
             row.addAll(Arrays.asList(
@@ -154,12 +164,16 @@ public class PortfolioSummary extends BaseUtil {
                     row.addAll(Arrays.asList("", "", ""));
                 }
             }
-            Developments.getDevelopment(found).forEach(d -> {
-                row.add(format(d.second()));
+            Headers.DEVELOPMENT_TITLES.forEach(key -> {
+                if (found.hasDevelopment(key)) {
+                    row.add(format(found.getDevelopment(key)));
+                }
+                else {
+                    row.add("-");
+                }
             });
             table.addRow(row);
-        }
-
+        });
         table.addHR();
     }
 
@@ -170,7 +184,8 @@ public class PortfolioSummary extends BaseUtil {
                 format(percentageSum),
                 format(avgFee),
                 format(risk),
-                "", "",
+                format(sum.get(Headers.SHARP_RATIO)),
+                "",
                 format(regions.get(Regions.SWEDEN)),
                 format(regions.get(Regions.ASIA))
         ));
@@ -181,7 +196,7 @@ public class PortfolioSummary extends BaseUtil {
                     format(companiesSize.get(2).second())
             ));
         }
-        Developments.DEVELOPMENT_TITLES.forEach(title -> {
+        Headers.DEVELOPMENT_TITLES.forEach(title -> {
             if (developments.has(title)) {
                 row.add(format(developments.get(title)));
             }
@@ -266,6 +281,9 @@ public class PortfolioSummary extends BaseUtil {
         addRow(
                 rows, true, 3, "Risk", risk, summary.risk
         );
+        addRow(
+                rows, true, 4, Headers.SHARP_RATIO, sum.get(Headers.SHARP_RATIO), summary.sum.get(Headers.SHARP_RATIO)
+        );
         if (!companiesSize.isEmpty() && !summary.companiesSize.isEmpty()) {
             headers.addAll(Arrays.asList(
                     "Storlek",
@@ -292,7 +310,6 @@ public class PortfolioSummary extends BaseUtil {
             table.addRow(row);
         });
         table.addRow("");
-
         rows.clear();
         compareValues(rows, true, sectors, summary.sectors);
         compareDevelopments(rows, false, summary);
@@ -324,11 +341,10 @@ public class PortfolioSummary extends BaseUtil {
             final List<List<String>> rows,
             final boolean first,
             final PortfolioSummary summary) {
-        for (int i = 0; i < Developments.DEVELOPMENT_TITLES.size(); ++i) {
-            final String title = Developments.DEVELOPMENT_TITLES.get(i);
+        for (int i = 0; i < Headers.DEVELOPMENT_TITLES.size(); ++i) {
+            final String title = Headers.DEVELOPMENT_TITLES.get(i);
             if (developments.has(title) && summary.developments.has(title)) {
-                addRow(
-                        rows, first, i, title,
+                addRow(rows, first, i, title,
                         developments.get(title),
                         summary.developments.get(title)
                 );

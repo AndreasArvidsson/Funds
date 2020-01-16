@@ -17,7 +17,7 @@ public class Values implements Iterable<Pair<String, Double>> {
     private final List<Pair<String, Double>> list = new ArrayList();
     private final Map<String, Double> map = new HashMap();
 
-    public void add(final String key, final Double value) {
+    public void add(final String key, final double value) {
         if (!map.containsKey(key)) {
             map.put(key, 0.0);
             insertOrder.add(key);

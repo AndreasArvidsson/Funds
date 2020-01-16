@@ -25,6 +25,7 @@ public class AvanzaFound {
     public List<ChartData> countryChartData, holdingChartData,
             sectorChartData, regionChartData;
     public final Map<String, ChartData> regionsMap = new HashMap();
+    private Map<String, Double> developmentMap;
 
     public void setCountryChartData(final List<ChartData> countryChartData) {
         this.countryChartData = countryChartData;
@@ -47,6 +48,69 @@ public class AvanzaFound {
             return regionsMap.get(regionName).y;
         }
         return 0.0;
+    }
+
+    public boolean hasDevelopment(final String key) {
+        if (developmentMap == null) {
+            developmentMap = compileDevelopmentMap();
+        }
+        return developmentMap.containsKey(key);
+    }
+
+    public double getDevelopment(final String key) {
+        if (developmentMap == null) {
+            developmentMap = compileDevelopmentMap();
+        }
+        return developmentMap.get(key);
+    }
+
+    private Map<String, Double> compileDevelopmentMap() {
+        final Map<String, Double> res = new HashMap();
+        Headers.DEVELOPMENT_TITLES.forEach(key -> {
+            switch (key) {
+                case Headers.T_1_D:
+                    if (developmentOneDay != null) {
+                        res.put(key, developmentOneDay);
+                    }
+                    break;
+                case Headers.T_1_M:
+                    if (developmentOneMonth != null) {
+                        res.put(key, developmentOneMonth);
+                    }
+                    break;
+                case Headers.T_3_M:
+                    if (developmentThreeMonths != null) {
+                        res.put(key, developmentThreeMonths);
+                    }
+                    break;
+                case Headers.T_6_M:
+                    if (developmentSixMonths != null) {
+                        res.put(key, developmentSixMonths);
+                    }
+                    break;
+                case Headers.T_Y:
+                    if (developmentThisYear != null) {
+                        res.put(key, developmentThisYear);
+                    }
+                    break;
+                case Headers.T_1_Y:
+                    if (developmentOneYear != null) {
+                        res.put(key, developmentOneYear);
+                    }
+                    break;
+                case Headers.T_3_Y:
+                    if (developmentThreeYears != null) {
+                        res.put(key, developmentThreeYears);
+                    }
+                    break;
+                case Headers.T_5_Y:
+                    if (developmentFiveYears != null) {
+                        res.put(key, developmentFiveYears);
+                    }
+                    break;
+            }
+        });
+        return res;
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
