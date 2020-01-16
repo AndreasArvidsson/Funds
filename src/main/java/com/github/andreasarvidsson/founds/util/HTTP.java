@@ -39,7 +39,7 @@ public abstract class HTTP {
         return Jsoup
                 .connect(url)
                 .userAgent("")
-                .timeout(30 * 1000) //10sec
+                .timeout(30 * 1000) //30sec
                 .get();
     }
 
