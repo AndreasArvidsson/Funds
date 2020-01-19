@@ -1,37 +1,35 @@
 package com.github.andreasarvidsson.founds;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.util.Arrays;
 
 public class Main {
 
-    public static void main(String[] args) throws ProtocolException, MalformedURLException, IOException {
-        final long t0 = System.currentTimeMillis();
+    public static void main(String[] args) throws IOException {
+        //If true then additional data will NOT be fetched from Morningstar. Saves time.
+        //Morningstar.DISABLE = true;
 
-        //If true then additional data will be fetched from Morningstar. Takes more time.
-        final boolean inclMorningstar = true;
-
-        final PortfolioSummary rikaTillsammans = PortfolioSummary.create("rikaTillsammans", Arrays.asList(
+        final Result result = new Result();
+        final Portfolio rikaTillsammans = new Portfolio(
+                "rikaTillsammans",
                 new SelectedFound(62.5, "Länsförsäkringar Global Indexnära"),
                 new SelectedFound(10, "Handelsbanken Gl Småbolag Ind Cri A1 SEK"),
                 new SelectedFound(10, "SEB Sverige Indexfond"),
                 new SelectedFound(5, "Spiltan Aktiefond Investmentbolag"),
                 new SelectedFound(12.5, "Länsförsäkringar Tillväxtmrkd Idxnära A", "Länsförsäkringar Tillväxtmarknad Indexnära")
-        ), inclMorningstar);
-        final PortfolioSummary pension = PortfolioSummary.create("Pension", Arrays.asList(
-                new SelectedFound(65, "Avanza Global"),
-                new SelectedFound(5, "Handelsbanken Gl Småbolag Ind Cri A1 SEK"),
+        );
+        final Portfolio pension = new Portfolio(
+                "Pension",
+                new SelectedFound(64, "Avanza Global"),
+                new SelectedFound(8, "Handelsbanken Gl Småbolag Ind Cri A1 SEK"),
                 new SelectedFound(10, "Spiltan Aktiefond Investmentbolag"),
-                new SelectedFound(5, "SEB Sverige Indexfond"),
-                new SelectedFound(5, "PLUS Småbolag Sverige Index"),
+                new SelectedFound(8, "SEB Sverige Indexfond"),
                 new SelectedFound(5, "Avanza Emerging Markets"),
                 new SelectedFound(5, "Swedbank Robur Access Asien")
-        ), inclMorningstar);
-        final PortfolioSummary founds = PortfolioSummary.create("Värdepapper", Arrays.asList(
-                new SelectedFound(48, "Avanza Global"),
-                new SelectedFound(13, "Spiltan Aktiefond Investmentbolag"),
+        );
+        final Portfolio founds = new Portfolio(
+                "Värdepapper",
+                new SelectedFound(50, "Avanza Global"),
+                new SelectedFound(11, "Spiltan Aktiefond Investmentbolag"),
                 new SelectedFound(5, "Avanza Emerging Markets"),
                 new SelectedFound(4, "Swedbank Robur Access Asien"),
                 new SelectedFound(5, "Swedbank Robur Technology A SEK"),
@@ -40,25 +38,26 @@ public class Main {
                 new SelectedFound(5, "SEB Teknologifond"),
                 new SelectedFound(5, "Skandia Time Global"),
                 new SelectedFound(5, "Lannebo Teknik")
-        ), inclMorningstar);
-
-        rikaTillsammans.print();
-        pension.print();
-        founds.print();
-        rikaTillsammans.compare(pension);
-        pension.compare(founds);
-
-        final Rankings rankings = Rankings.create(Arrays.asList(
+        );
+        final Rankings rankings = new Rankings(
+                "Teknik",
                 "DNB Teknologi A",
                 "SEB Teknologifond",
                 "Swedbank Robur Ny Teknik A",
                 "Swedbank Robur Technology A SEK",
                 "Lannebo Teknik",
                 "Skandia Time Global"
-        ));
-        rankings.print();
+        );
 
-        System.out.printf("Elapsed time: %.1fs\n", (System.currentTimeMillis() - t0) * 0.001);
+        result.add(rikaTillsammans);
+        result.add(pension);
+        result.add(founds);
+        result.compare(rikaTillsammans, pension);
+        result.compare(pension, founds);
+        result.add(rankings);
+
+        result.print();
+        result.save();
     }
 
 }

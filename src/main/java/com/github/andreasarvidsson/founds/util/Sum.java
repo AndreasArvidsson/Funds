@@ -21,7 +21,7 @@ public class Sum {
         percentages.put(key, percentages.get(key) + percentage);
     }
 
-    public void compile() {
+    public void normalize() {
         sum.entrySet().forEach(e -> {
             sum.put(e.getKey(), e.getValue() / percentages.get(e.getKey()));
         });

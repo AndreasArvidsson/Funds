@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author Andreas Arvidsson
  */
-public class Table {
+public class AsciiTable {
 
     private final static int CELL_SPACING = 3;
     private final List<Row> rows = new ArrayList();
@@ -19,19 +19,26 @@ public class Table {
         colWidths.clear();
     }
 
-    public Table addRow(final List<String> cells) {
+    public AsciiTable addRow(final List<String> cells) {
         return addRow(rows.size(), cells);
     }
 
-    public Table addRow(final String... cells) {
+    public AsciiTable addRows(final List<List<String>> rows) {
+        rows.forEach(row -> {
+            addRow(row);
+        });
+        return this;
+    }
+
+    public AsciiTable addRow(final String... cells) {
         return addRow(rows.size(), Arrays.asList(cells));
     }
 
-    public Table addRow(final int rowIndex, final String... cells) {
+    public AsciiTable addRow(final int rowIndex, final String... cells) {
         return addRow(rowIndex, Arrays.asList(cells));
     }
 
-    public Table addRow(final int rowIndex, final List<String> cells) {
+    public AsciiTable addRow(final int rowIndex, final List<String> cells) {
         while (rows.size() <= rowIndex) {
             rows.add(new Row());
         }
@@ -41,7 +48,7 @@ public class Table {
         return this;
     }
 
-    public Table addHR() {
+    public AsciiTable addHR() {
         rows.add(new Row(true));
         return this;
     }
@@ -109,21 +116,21 @@ public class Table {
         }
     }
 
-}
+    private class Row {
 
-class Row {
+        public final List<String> cells;
+        public final boolean hr;
 
-    public final List<String> cells;
-    public final boolean hr;
+        public Row() {
+            this.cells = new ArrayList();
+            this.hr = false;
+        }
 
-    public Row() {
-        this.cells = new ArrayList();
-        this.hr = false;
-    }
+        public Row(final boolean hr) {
+            this.cells = null;
+            this.hr = hr;
+        }
 
-    public Row(final boolean hr) {
-        this.cells = null;
-        this.hr = hr;
     }
 
 }

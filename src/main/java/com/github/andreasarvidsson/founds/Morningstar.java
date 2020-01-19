@@ -19,10 +19,15 @@ import org.jsoup.nodes.Element;
  */
 public abstract class Morningstar {
 
+    public static boolean DISABLE = false;
+
     private static final String BASE = "https://www.morningstar.se";
     private static final Map<String, MorningstarFound> FOUNDS = new HashMap();
 
     public static MorningstarFound getFound(final String name, final String... alternativeNames) throws IOException {
+        if (DISABLE) {
+            return null;
+        }
         try {
             return getFoundInner(name);
         }

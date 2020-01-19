@@ -6,7 +6,6 @@ import com.github.andreasarvidsson.founds.util.FileCache;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,14 +19,6 @@ public abstract class Avanza {
 
     private static final String BASE = "https://www.avanza.se/_cqbe";
     private static final Map<String, AvanzaFound> FOUNDS = new HashMap();
-
-    public static List<AvanzaFound> getFounds(final List<String> foundNames) throws IOException {
-        final List<AvanzaFound> res = new ArrayList();
-        for (final String foundName : foundNames) {
-            res.add(getFound(foundName));
-        }
-        return res;
-    }
 
     public static AvanzaFound getFound(final String name, final String... alternativeNames) throws IOException {
         try {

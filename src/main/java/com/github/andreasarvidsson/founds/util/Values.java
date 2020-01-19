@@ -52,11 +52,15 @@ public class Values implements Iterable<Pair<String, Double>> {
     }
 
     public boolean isEmpty() {
-        return list.isEmpty();
+        return map.isEmpty();
     }
 
     public int size() {
-        return list.size();
+        return map.size();
+    }
+
+    public void normalize(final String key, final double sum) {
+        map.put(key, map.get(key) / sum);
     }
 
     @Override

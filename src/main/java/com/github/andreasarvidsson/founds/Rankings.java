@@ -1,8 +1,6 @@
 package com.github.andreasarvidsson.founds;
 
-import com.github.andreasarvidsson.founds.util.BaseUtil;
 import com.github.andreasarvidsson.founds.util.Pair;
-import com.github.andreasarvidsson.founds.util.Table;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +13,7 @@ import java.util.Map;
  *
  * @author Andreas Arvidsson
  */
-public class Rankings extends BaseUtil {
+public class Rankings {
 
     private final static List<String> DEV_HEADERS = Arrays.asList(
             Headers.T_6_M,
@@ -24,22 +22,25 @@ public class Rankings extends BaseUtil {
             Headers.T_5_Y
     );
 
-    private final List<FoundRank> list = new ArrayList();
+    public final String name;
+    public final List<FoundRank> list = new ArrayList();
+    public final List<String> headers = new ArrayList();
     private final Map<AvanzaFound, FoundRank> map = new HashMap();
-    private final List<String> headers = new ArrayList();
 
-    public static Rankings create(final List<String> foundNames) throws IOException {
-        return new Rankings(
-                Avanza.getFounds(foundNames)
-        );
+    public Rankings(final String name, final String... foundNames) throws IOException {
+        this(name, Arrays.asList(foundNames));
     }
 
-    public Rankings(final List<AvanzaFound> founds) {
-        founds.forEach(found -> {
+    public Rankings(final String name, final List<String> foundNames) throws IOException {
+        this.name = name;
+        final List<AvanzaFound> founds = new ArrayList();
+        for (final String foundName : foundNames) {
+            final AvanzaFound found = Avanza.getFound(foundName);
             final FoundRank fr = new FoundRank(found);
             list.add(fr);
             map.put(fr.found, fr);
-        });
+            founds.add(found);
+        }
         final List<Pair<AvanzaFound, Double>> fees = getFees(founds);
         addValues("Avgift", fees);
         final List<Pair<AvanzaFound, Double>> sharpeRatio = getSharpeRatio(founds);
@@ -65,41 +66,6 @@ public class Rankings extends BaseUtil {
             fr.points += points;
             fr.values.add(new Pair(points, p.second()));
         }
-    }
-
-    public void print() {
-        System.out.printf(
-                "\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
-                + " Rankning "
-                + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n"
-        );
-        final Table table = new Table();
-        final List<String> headerRow = new ArrayList();
-        headerRow.add("");
-        headerRow.addAll(headers);
-        headerRow.add("Poäng");
-        table.addRow(headerRow);
-        table.addHR();
-        list.forEach(fr -> {
-            final List<String> row = new ArrayList();
-            row.add(fr.found.name);
-            fr.values.forEach(p -> {
-                row.add(String.format("%d (%s)", p.first(), format(p.second())));
-            });
-
-//            for (int i = 0; i < HEADERS.size(); ++i) {
-//                if (i < fr.values.size()) {
-//                    final Pair<Integer, Double> p = fr.values.get(i);
-//                    row.add(String.format("%d (%s)", p.first(), format(p.second())));
-//                }
-//                else {
-//                    row.add("");
-//                }
-//            }
-            row.add(String.format("%d", fr.points));
-            table.addRow(row);
-        });
-        table.print();
     }
 
     private List<Pair<AvanzaFound, Double>> getFees(
@@ -155,16 +121,16 @@ public class Rankings extends BaseUtil {
         }
     }
 
-}
+    public static class FoundRank {
 
-class FoundRank {
+        public final AvanzaFound found;
+        public int points = 0;
+        public final List<Pair<Integer, Double>> values = new ArrayList();
 
-    public final AvanzaFound found;
-    public int points = 0;
-    public final List<Pair<Integer, Double>> values = new ArrayList();
+        public FoundRank(final AvanzaFound found) {
+            this.found = found;
+        }
 
-    public FoundRank(final AvanzaFound found) {
-        this.found = found;
     }
 
 }
