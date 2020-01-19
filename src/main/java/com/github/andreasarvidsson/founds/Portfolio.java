@@ -49,7 +49,10 @@ public class Portfolio {
             avgFee += fd.avanza.productFee * fd.percentageNormalized;
             risk += fd.avanza.risk * fd.percentageNormalized;
             if (fd.avanza.sharpeRatio != null) {
-                sum.add(Headers.SHARP_RATIO, fd.avanza.sharpeRatio, fd.percentageNormalized);
+                sum.add(Headers.SHARPE_RATIO, fd.avanza.sharpeRatio, fd.percentageNormalized);
+            }
+            if (fd.avanza.standardDeviation != null) {
+                sum.add(Headers.STANDARD_DEVIATION, fd.avanza.standardDeviation, fd.percentageNormalized);
             }
             Headers.DEVELOPMENT_TITLES.forEach(key -> {
                 if (fd.avanza.hasDevelopment(key)) {

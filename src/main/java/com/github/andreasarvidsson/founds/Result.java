@@ -190,8 +190,8 @@ public class Result {
 
     private List<String> getFoundsHeadersRow(final Portfolio p) {
         final List<String> res = new ArrayList();
-        res.addAll(Arrays.asList(
-                "Namn", "Andel (%)", "Avgift (%)", "Risk", Headers.SHARP_RATIO,
+        res.addAll(Arrays.asList("Namn", "Andel (%)", "Avgift (%)", "Risk",
+                Headers.STANDARD_DEVIATION, Headers.SHARPE_RATIO,
                 "Kategorier", "Sverige (%)", "Asien (%)"
         ));
         if (!p.companiesSize.isEmpty()) {
@@ -217,6 +217,7 @@ public class Result {
                     format(fd.percentage * 100),
                     format(found.productFee),
                     Integer.toString(found.risk),
+                    found.standardDeviation != null ? format(found.standardDeviation) : "-",
                     found.sharpeRatio != null ? format(found.sharpeRatio) : "-",
                     String.join(", ", found.categories),
                     format(fd.avanza.getRegion(Regions.SWEDEN)),
@@ -254,7 +255,8 @@ public class Result {
                 format(p.percentageSum),
                 format(p.avgFee),
                 format(p.risk),
-                format(p.sum.get(Headers.SHARP_RATIO)),
+                format(p.sum.get(Headers.STANDARD_DEVIATION)),
+                format(p.sum.get(Headers.SHARPE_RATIO)),
                 "",
                 format(p.regions.get(Regions.SWEDEN)),
                 format(p.regions.get(Regions.ASIA))
@@ -381,9 +383,8 @@ public class Result {
         addRow(
                 res, true, 3, "Risk", p1.risk, p2.risk
         );
-        addRow(
-                res, true, 4, Headers.SHARP_RATIO, p1.sum.get(Headers.SHARP_RATIO), p2.sum.get(Headers.SHARP_RATIO)
-        );
+        addRow(res, true, 4, Headers.STANDARD_DEVIATION, p1.sum.get(Headers.STANDARD_DEVIATION), p2.sum.get(Headers.STANDARD_DEVIATION));
+        addRow(res, true, 5, Headers.SHARPE_RATIO, p1.sum.get(Headers.SHARPE_RATIO), p2.sum.get(Headers.SHARPE_RATIO));
         if (!p1.companiesSize.isEmpty() && !p2.companiesSize.isEmpty()) {
             compareValues(res, false, p1.companiesSize, p2.companiesSize);
         }

@@ -9,7 +9,8 @@ import java.util.List;
  */
 public abstract class Headers {
 
-    public final static String SHARP_RATIO = "Sharpekvot";
+    public final static String SHARPE_RATIO = "Sharpekvot";
+    public final static String STANDARD_DEVIATION = "Stdav (%)";
     public static final String T_1_D = "1 d";
     public static final String T_1_M = "1 m";
     public static final String T_3_M = "3 m";

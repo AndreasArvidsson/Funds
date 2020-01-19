@@ -45,7 +45,7 @@ public class Rankings {
         addValues("Avgift", fees);
         final List<Pair<AvanzaFound, Double>> sharpeRatio = getSharpeRatio(founds);
         if (sharpeRatio != null) {
-            addValues(Headers.SHARP_RATIO, sharpeRatio);
+            addValues(Headers.SHARPE_RATIO, sharpeRatio);
         }
         for (int i = 0; i < 4; ++i) {
             final List<Pair<AvanzaFound, Double>> values = getValues(founds, i);
