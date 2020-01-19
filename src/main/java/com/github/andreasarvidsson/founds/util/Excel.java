@@ -1,5 +1,6 @@
 package com.github.andreasarvidsson.founds.util;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,8 +37,9 @@ public class Excel {
         hrStyle.setBorderBottom(BorderStyle.THIN);
     }
 
-    public void save(final String name) throws FileNotFoundException, IOException {
-        wb.write(new FileOutputStream(name + ".xls"));
+    public void save(final File file) throws FileNotFoundException, IOException {
+        file.getParentFile().mkdirs();
+        wb.write(new FileOutputStream(file));
     }
 
     public ExcelTable getTable(final String name) {

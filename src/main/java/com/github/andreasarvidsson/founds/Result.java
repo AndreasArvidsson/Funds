@@ -5,6 +5,7 @@ import com.github.andreasarvidsson.founds.util.Comparison;
 import com.github.andreasarvidsson.founds.util.Excel;
 import com.github.andreasarvidsson.founds.util.Excel.ExcelTable;
 import com.github.andreasarvidsson.founds.util.Values;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -118,9 +119,9 @@ public class Result {
     }
 
     public void save() throws FileNotFoundException, IOException {
-        excel.save(String.format(
-                "Fonderportföljer, %s", getTimeStamp()
-        ));
+        excel.save(new File(String.format(
+                "excelfiler/Fonderportföljer, %s.xls", getTimeStamp()
+        )));
     }
 
     private void addFoundsTable(final Portfolio portfolio) {
