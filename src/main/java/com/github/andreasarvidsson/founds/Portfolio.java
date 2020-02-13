@@ -78,7 +78,7 @@ public class Portfolio {
                 companiesSize.add("Små svenska bolag", fd.morningstar.smallCompanies * fd.percentageNormalized * swePercentage);
             }
         }
-        if (!companiesSize.isEmpty()) {
+        if (!companiesSize.isEmpty() && regions.has(Regions.SWEDEN)) {
             final double sweSum = regions.get(Regions.SWEDEN) * 0.01;
             companiesSize.normalize("Stora svenska bolag", sweSum);
             companiesSize.normalize("Medelstora svenska bolag", sweSum);

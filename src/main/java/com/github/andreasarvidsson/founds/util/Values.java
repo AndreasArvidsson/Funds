@@ -43,6 +43,10 @@ public class Values implements Iterable<Pair<String, Double>> {
         }
     }
 
+    public boolean has(final String key) {
+        return map.containsKey(key);
+    }
+
     public double get(final String key) {
         return map.get(key);
     }

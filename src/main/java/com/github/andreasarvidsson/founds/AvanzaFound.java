@@ -43,6 +43,10 @@ public class AvanzaFound {
         Collections.sort(regionChartData, (a, b) -> Double.compare(b.y, a.y));
     }
 
+    public boolean hasRegion(final String regionName) {
+        return regionsMap.containsKey(regionName);
+    }
+
     public double getRegion(final String regionName) {
         if (regionsMap.containsKey(regionName)) {
             return regionsMap.get(regionName).y;

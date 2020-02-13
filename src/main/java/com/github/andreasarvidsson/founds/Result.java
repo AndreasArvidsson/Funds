@@ -21,6 +21,7 @@ import java.util.List;
 public class Result {
 
     private final static String SPACE = "   |   ";
+    private final static String MISSING = "-";
     private final Excel excel = new Excel();
     private final StringBuilder sb = new StringBuilder("\n");
     private final long t0 = System.currentTimeMillis();
@@ -217,11 +218,11 @@ public class Result {
                     format(fd.percentage * 100),
                     format(found.productFee),
                     Integer.toString(found.risk),
-                    found.standardDeviation != null ? format(found.standardDeviation) : "-",
-                    found.sharpeRatio != null ? format(found.sharpeRatio) : "-",
+                    found.standardDeviation != null ? format(found.standardDeviation) : MISSING,
+                    found.sharpeRatio != null ? format(found.sharpeRatio) : MISSING,
                     String.join(", ", found.categories),
-                    format(fd.avanza.getRegion(Regions.SWEDEN)),
-                    format(fd.avanza.getRegion(Regions.ASIA))
+                    fd.avanza.hasRegion(Regions.SWEDEN) ? format(fd.avanza.getRegion(Regions.SWEDEN)) : MISSING,
+                    fd.avanza.hasRegion(Regions.ASIA) ? format(fd.avanza.getRegion(Regions.ASIA)) : MISSING
             ));
             if (!p.companiesSize.isEmpty()) {
                 if (fd.morningstar != null) {
@@ -258,8 +259,8 @@ public class Result {
                 format(p.sum.get(Headers.STANDARD_DEVIATION)),
                 format(p.sum.get(Headers.SHARPE_RATIO)),
                 "",
-                format(p.regions.get(Regions.SWEDEN)),
-                format(p.regions.get(Regions.ASIA))
+                p.regions.has(Regions.SWEDEN) ? format(p.regions.get(Regions.SWEDEN)) : MISSING,
+                p.regions.has(Regions.ASIA) ? format(p.regions.get(Regions.ASIA)) : MISSING
         ));
         if (!p.companiesSize.isEmpty()) {
             res.addAll(Arrays.asList(
