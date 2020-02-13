@@ -241,7 +241,7 @@ public class Result {
                     row.add(format(found.getDevelopment(key)));
                 }
                 else {
-                    row.add("-");
+                    row.add(MISSING);
                 }
             });
             res.add(row);
