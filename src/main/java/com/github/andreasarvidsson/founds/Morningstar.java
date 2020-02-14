@@ -29,13 +29,13 @@ public abstract class Morningstar {
             return null;
         }
         try {
-            return getFoundInner(name);
+            return getFoundByName(name);
         }
         catch (final NoSuchElementException e) {
         }
         for (int i = 0; i < alternativeNames.length; ++i) {
             try {
-                return getFoundInner(alternativeNames[i]);
+                return getFoundByName(alternativeNames[i]);
             }
             catch (final NoSuchElementException e) {
             }
@@ -43,25 +43,30 @@ public abstract class Morningstar {
         throw new NoSuchElementException(String.format("Can't find Morningstar found '%s'", name));
     }
 
-    private static MorningstarFound getFoundInner(final String name) throws IOException {
+    private static MorningstarFound getFoundByName(final String name) throws IOException {
         if (!FOUNDS.containsKey(name)) {
             final String fileName = String.format("morningstar_%s", name);
             MorningstarFound found = FileCache.load(fileName, MorningstarFound.class);
             if (found == null) {
                 final String id = getId(name);
-                final Document doc = HTTP.getDocument(String.format(
-                        "%s/Funds/Quicktake/Portfolio.aspx?perfid=%s",
-                        BASE, id
-                ));
-                found = new MorningstarFound();
-                found.largeCompanies = getCompanySize(doc, "Stora bolag");
-                found.middleCompanies = getCompanySize(doc, "Medelstora bolag");
-                found.smallCompanies = getCompanySize(doc, "Små bolag");
+                found = getFoundByID(id);
                 FileCache.store(fileName, found);
             }
             FOUNDS.put(name, found);
         }
         return FOUNDS.get(name);
+    }
+
+    private static MorningstarFound getFoundByID(final String id) throws IOException {
+        final MorningstarFound res = new MorningstarFound();
+        final Document doc = HTTP.getDocument(String.format(
+                "%s/Funds/Quicktake/Portfolio.aspx?perfid=%s",
+                BASE, id
+        ));
+        res.largeCompanies = getCompanySize(doc, "Stora bolag");
+        res.middleCompanies = getCompanySize(doc, "Medelstora bolag");
+        res.smallCompanies = getCompanySize(doc, "Små bolag");
+        return res;
     }
 
     private static double getCompanySize(final Document doc, final String title) {

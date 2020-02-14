@@ -41,12 +41,13 @@ public class Portfolio {
                     sd.percentage,
                     sd.percentage / percentageSum,
                     Avanza.getFound(sd.name, sd.alternativeNames),
-                    Morningstar.getFound(sd.name, sd.alternativeNames)
+                    Morningstar.getFound(sd.name, sd.alternativeNames),
+                    sd.useSavr ? SAVR.getFound(sd.name, sd.alternativeNames) : null
             ));
         }
         percentageSum *= 100;
         for (final FoundData fd : founds) {
-            avgFee += fd.avanza.productFee * fd.percentageNormalized;
+            avgFee += fd.getFee() * fd.percentageNormalized;
             risk += fd.avanza.risk * fd.percentageNormalized;
             if (fd.avanza.sharpeRatio != null) {
                 sum.add(Headers.SHARPE_RATIO, fd.avanza.sharpeRatio, fd.percentageNormalized);

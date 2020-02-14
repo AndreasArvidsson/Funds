@@ -15,6 +15,7 @@ import org.jsoup.nodes.Document;
 public abstract class HTTP {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final int TIMEOUT = 30 * 1000; //30sec
 
     public static <E> E get(final String url, final Class<E> type) throws IOException {
         final HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
@@ -36,11 +37,7 @@ public abstract class HTTP {
     }
 
     public static Document getDocument(final String url) throws IOException {
-        return Jsoup
-                .connect(url)
-                .userAgent("")
-                .timeout(30 * 1000) //30sec
-                .get();
+        return Jsoup.parse(new URL(url), TIMEOUT);
     }
 
 }

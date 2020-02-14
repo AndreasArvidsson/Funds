@@ -8,6 +8,9 @@ public class Main {
         //If true then additional data will NOT be fetched from Morningstar. Saves time.
         //Morningstar.DISABLE = true;
 
+        //If true then found fees will be fetched form SAVR
+        final boolean useSavr = true;
+
         final Result result = new Result();
         final Portfolio rikaTillsammans = new Portfolio(
                 "rikaTillsammans",
@@ -28,25 +31,26 @@ public class Main {
         );
         final Portfolio founds = new Portfolio(
                 "Värdepapper",
-                new SelectedFound(50, "Avanza Global"),
-                new SelectedFound(11, "Spiltan Aktiefond Investmentbolag"),
-                new SelectedFound(5, "Avanza Emerging Markets"),
-                new SelectedFound(4, "Swedbank Robur Access Asien"),
-                new SelectedFound(5, "Swedbank Robur Technology A SEK"),
-                new SelectedFound(5, "Swedbank Robur Ny Teknik A"),
-                new SelectedFound(5, "Core Ny Teknik A"),
-                new SelectedFound(5, "SEB Teknologifond"),
-                new SelectedFound(5, "Skandia Time Global"),
-                new SelectedFound(5, "Lannebo Teknik")
+                new SelectedFound(51, "Avanza Global"),
+                new SelectedFound(10, "Spiltan Aktiefond Investmentbolag"),
+                new SelectedFound(4, "Avanza Emerging Markets"),
+                new SelectedFound(5, "Swedbank Robur Access Asien"),
+                new SelectedFound(6, useSavr, "Swedbank Robur Technology A SEK"),
+                new SelectedFound(6, useSavr, "Swedbank Robur Ny Teknik A"),
+                new SelectedFound(6, useSavr, "Core Ny Teknik A"),
+                new SelectedFound(6, useSavr, "SEB Teknologifond"),
+                new SelectedFound(6, useSavr, "Skandia Time Global")
         );
         final Rankings rankings = new Rankings(
                 "Teknik",
+                useSavr,
                 "DNB Teknologi A",
                 "SEB Teknologifond",
                 "Swedbank Robur Ny Teknik A",
                 "Swedbank Robur Technology A SEK",
-                "Lannebo Teknik",
                 "Skandia Time Global"
+        //"Lannebo Teknik",
+        //"Core Ny Teknik A"
         );
 
         result.add(rikaTillsammans);

@@ -216,7 +216,7 @@ public class Result {
             row.addAll(Arrays.asList(
                     found.name,
                     format(fd.percentage * 100),
-                    format(found.productFee),
+                    format(fd.getFee()),
                     Integer.toString(found.risk),
                     found.standardDeviation != null ? format(found.standardDeviation) : MISSING,
                     found.sharpeRatio != null ? format(found.sharpeRatio) : MISSING,
@@ -394,9 +394,9 @@ public class Result {
 
     private List<List<String>> getRankingsRows(final Rankings rankings) {
         final List<List<String>> res = new ArrayList();
-        rankings.list.forEach(fr -> {
+        rankings.founds.forEach(fr -> {
             final List<String> row = new ArrayList();
-            row.add(fr.found.name);
+            row.add(fr.avanza.name);
             fr.values.forEach(p -> {
                 row.add(String.format("%d (%s)", p.first(), format(p.second())));
             });

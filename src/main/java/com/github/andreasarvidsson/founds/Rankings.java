@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -23,80 +21,74 @@ public class Rankings {
     );
 
     public final String name;
-    public final List<FoundRank> list = new ArrayList();
+    public final List<FoundRank> founds = new ArrayList();
     public final List<String> headers = new ArrayList();
-    private final Map<AvanzaFound, FoundRank> map = new HashMap();
 
     public Rankings(final String name, final String... foundNames) throws IOException {
-        this(name, Arrays.asList(foundNames));
+        this(name, false, foundNames);
     }
 
-    public Rankings(final String name, final List<String> foundNames) throws IOException {
+    public Rankings(final String name, final boolean useSavr, final String... foundNames) throws IOException {
         this.name = name;
-        final List<AvanzaFound> founds = new ArrayList();
         for (final String foundName : foundNames) {
-            final AvanzaFound found = Avanza.getFound(foundName);
-            final FoundRank fr = new FoundRank(found);
-            list.add(fr);
-            map.put(fr.found, fr);
-            founds.add(found);
+            final FoundRank fr = new FoundRank(
+                    Avanza.getFound(foundName),
+                    useSavr ? SAVR.getFound(foundName) : null
+            );
+            founds.add(fr);
         }
-        final List<Pair<AvanzaFound, Double>> fees = getFees(founds);
+        final List<Pair<FoundRank, Double>> fees = getFees();
         addValues("Avgift", fees);
-        final List<Pair<AvanzaFound, Double>> sharpeRatio = getSharpeRatio(founds);
+        final List<Pair<FoundRank, Double>> sharpeRatio = getSharpeRatio();
         if (sharpeRatio != null) {
             addValues(Headers.SHARPE_RATIO, sharpeRatio);
         }
         for (int i = 0; i < 4; ++i) {
-            final List<Pair<AvanzaFound, Double>> values = getValues(founds, i);
+            final List<Pair<FoundRank, Double>> values = getValues(i);
             if (values == null) {
                 break;
             }
             addValues(DEV_HEADERS.get(i), values);
         }
-        Collections.sort(list, (a, b) -> Integer.compare(b.points, a.points));
+        Collections.sort(founds, (a, b) -> Integer.compare(b.points, a.points));
     }
 
-    private void addValues(final String header, final List<Pair<AvanzaFound, Double>> values) {
+    private void addValues(final String header, final List<Pair<FoundRank, Double>> values) {
         headers.add(header);
         for (int j = 0; j < values.size(); ++j) {
-            final Pair<AvanzaFound, Double> p = values.get(j);
-            final FoundRank fr = map.get(p.first());
+            final Pair<FoundRank, Double> p = values.get(j);
+            final FoundRank fr = p.first();
             final int points = j + 1;
             fr.points += points;
             fr.values.add(new Pair(points, p.second()));
         }
     }
 
-    private List<Pair<AvanzaFound, Double>> getFees(
-            final List<AvanzaFound> founds) {
-        final List<Pair<AvanzaFound, Double>> res = new ArrayList();
-        for (final AvanzaFound found : founds) {
-            res.add(new Pair(found, found.productFee));
-        }
+    private List<Pair<FoundRank, Double>> getFees() {
+        final List<Pair<FoundRank, Double>> res = new ArrayList();
+        founds.forEach(found -> {
+            res.add(new Pair(found, found.getFee()));
+        });
         Collections.sort(res, (a, b) -> Double.compare(b.second(), a.second()));
         return res;
     }
 
-    private List<Pair<AvanzaFound, Double>> getSharpeRatio(
-            final List<AvanzaFound> founds) {
-        final List<Pair<AvanzaFound, Double>> res = new ArrayList();
-        for (final AvanzaFound found : founds) {
-            if (found.sharpeRatio == null) {
+    private List<Pair<FoundRank, Double>> getSharpeRatio() {
+        final List<Pair<FoundRank, Double>> res = new ArrayList();
+        for (final FoundRank found : founds) {
+            if (found.avanza.sharpeRatio == null) {
                 return null;
             }
-            res.add(new Pair(found, found.sharpeRatio));
+            res.add(new Pair(found, found.avanza.sharpeRatio));
         }
         Collections.sort(res, (a, b) -> Double.compare(a.second(), b.second()));
         return res;
     }
 
-    private List<Pair<AvanzaFound, Double>> getValues(
-            final List<AvanzaFound> founds,
-            final int level) {
-        final List<Pair<AvanzaFound, Double>> res = new ArrayList();
-        for (final AvanzaFound found : founds) {
-            final Double value = getValue(found, level);
+    private List<Pair<FoundRank, Double>> getValues(final int level) {
+        final List<Pair<FoundRank, Double>> res = new ArrayList();
+        for (final FoundRank found : founds) {
+            final Double value = getValue(found.avanza, level);
             if (value == null) {
                 return null;
             }
@@ -123,12 +115,18 @@ public class Rankings {
 
     public static class FoundRank {
 
-        public final AvanzaFound found;
+        public final AvanzaFound avanza;
+        public final SavrFound savr;
         public int points = 0;
         public final List<Pair<Integer, Double>> values = new ArrayList();
 
-        public FoundRank(final AvanzaFound found) {
-            this.found = found;
+        public FoundRank(final AvanzaFound avanza, final SavrFound savr) {
+            this.avanza = avanza;
+            this.savr = savr;
+        }
+
+        public double getFee() {
+            return savr != null ? savr.fee : avanza.productFee;
         }
 
     }

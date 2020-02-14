@@ -22,13 +22,13 @@ public abstract class Avanza {
 
     public static AvanzaFound getFound(final String name, final String... alternativeNames) throws IOException {
         try {
-            return getFoundInner(name);
+            return getFoundByName(name);
         }
         catch (final NoSuchElementException e) {
         }
         for (int i = 0; i < alternativeNames.length; ++i) {
             try {
-                return getFoundInner(alternativeNames[i]);
+                return getFoundByName(alternativeNames[i]);
             }
             catch (final NoSuchElementException e) {
             }
@@ -36,7 +36,7 @@ public abstract class Avanza {
         throw new NoSuchElementException(String.format("Can't find Avanza found '%s'", name));
     }
 
-    private static AvanzaFound getFoundInner(final String name) throws IOException {
+    private static AvanzaFound getFoundByName(final String name) throws IOException {
         if (!FOUNDS.containsKey(name)) {
             final String fileName = String.format("avanza_%s", name);
             AvanzaFound found = FileCache.load(fileName, AvanzaFound.class
