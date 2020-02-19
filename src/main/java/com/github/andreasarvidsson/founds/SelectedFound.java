@@ -11,14 +11,18 @@ public class SelectedFound {
     final double percentage;
     final boolean useSavr;
 
-    public SelectedFound(final double percentage, final String name, final String... alternativeNames) {
-        this.name = name;
-        this.alternativeNames = alternativeNames;
-        this.percentage = percentage / 100;
-        this.useSavr = false;
+    public SelectedFound(
+            final double percentage,
+            final String name,
+            final String... alternativeNames) {
+        this(percentage, false, name, alternativeNames);
     }
 
-    public SelectedFound(final double percentage, final boolean useSavr, final String name, final String... alternativeNames) {
+    public SelectedFound(
+            final double percentage,
+            final boolean useSavr,
+            final String name,
+            final String... alternativeNames) {
         this.name = name;
         this.alternativeNames = alternativeNames;
         this.percentage = percentage / 100;

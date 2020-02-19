@@ -8,7 +8,7 @@ public class Main {
         //If true then additional data will NOT be fetched from Morningstar. Saves time.
         //Morningstar.DISABLE = true;
 
-        //If true then found fees will be fetched form SAVR
+        //If true then found fees will be fetched from SAVR
         final boolean useSavr = true;
 
         final Result result = new Result();
