@@ -15,15 +15,16 @@ public class Main {
         final Portfolio rikaTillsammans = new Portfolio(
                 "rikaTillsammans",
                 new SelectedFound(62.5, "Länsförsäkringar Global Indexnära"),
-                new SelectedFound(10, "Handelsbanken Gl Småbolag Ind Cri A1 SEK"),
+                new SelectedFound(10, "Handelsbanken Gl Småbolag Ind Cri A1 SEK", "Handelsbanken Global Småbolag Index Criteria A1 SEK"),
                 new SelectedFound(10, "SEB Sverige Indexfond"),
                 new SelectedFound(5, "Spiltan Aktiefond Investmentbolag"),
-                new SelectedFound(12.5, "Länsförsäkringar Tillväxtmrkd Idxnära A", "Länsförsäkringar Tillväxtmarknad Indexnära")
+                new SelectedFound(12.5, "Länsförsäkringar Tillväxtmrkd Idxnära A", "Länsförsäkringar Tillväxtmarknad Indexnära A")
         );
+
         final Portfolio pension = new Portfolio(
                 "Pension",
                 new SelectedFound(64, "Avanza Global"),
-                new SelectedFound(8, "Handelsbanken Gl Småbolag Ind Cri A1 SEK"),
+                new SelectedFound(8, "Handelsbanken Gl Småbolag Ind Cri A1 SEK", "Handelsbanken Global Småbolag Index Criteria A1 SEK"),
                 new SelectedFound(10, "Spiltan Aktiefond Investmentbolag"),
                 new SelectedFound(8, "SEB Sverige Indexfond"),
                 new SelectedFound(5, "Avanza Emerging Markets"),
