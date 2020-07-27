@@ -120,8 +120,15 @@ public class Result {
     }
 
     public void save() throws FileNotFoundException, IOException {
+        if (!excel.hasTable("Om")) {
+            final ExcelTable excelTable = excel.getTable("Om");
+            excelTable.addRow(Arrays.asList("Skapad av", "Andreas Arvidsson"));
+            excelTable.addRow(Arrays.asList("Källa", "https://github.com/AndreasArvidsson/Founds"));
+            excelTable.autoSizeColumns(2);
+        }
+
         excel.save(new File(String.format(
-                "excelfiler/Fonderportföljer, %s.xls", getTimeStamp()
+                "excel/Fonderportföljer, %s.xls", getTimeStamp()
         )));
     }
 

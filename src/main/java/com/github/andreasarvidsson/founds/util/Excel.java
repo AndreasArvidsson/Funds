@@ -42,6 +42,10 @@ public class Excel {
         wb.write(new FileOutputStream(file));
     }
 
+    public boolean hasTable(final String name) {
+        return wb.getSheet(name) != null;
+    }
+
     public ExcelTable getTable(final String name) {
         Sheet sheet = wb.getSheet(name);
         if (sheet == null) {
