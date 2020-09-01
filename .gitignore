@@ -2,4 +2,4 @@ target
 cache
 nbactions.xml
 excel
-dropboxignore.txt
+*.txt
