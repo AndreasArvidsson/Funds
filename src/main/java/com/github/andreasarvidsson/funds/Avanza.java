@@ -1,8 +1,8 @@
-package com.github.andreasarvidsson.founds;
+package com.github.andreasarvidsson.funds;
 
-import com.github.andreasarvidsson.founds.util.HTTP;
+import com.github.andreasarvidsson.funds.util.HTTP;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.github.andreasarvidsson.founds.util.FileCache;
+import com.github.andreasarvidsson.funds.util.FileCache;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -18,39 +18,39 @@ import java.util.NoSuchElementException;
 public abstract class Avanza {
 
     private static final String BASE = "https://www.avanza.se/_cqbe";
-    private static final Map<String, AvanzaFound> FOUNDS = new HashMap();
+    private static final Map<String, AvanzaFund> FUNDS = new HashMap();
 
-    public static AvanzaFound getFound(final String name, final String... alternativeNames) throws IOException {
+    public static AvanzaFund getFund(final String name, final String... alternativeNames) throws IOException {
         try {
-            return getFoundByName(name);
+            return getFundByName(name);
         }
         catch (final NoSuchElementException e) {
         }
         for (int i = 0; i < alternativeNames.length; ++i) {
             try {
-                return getFoundByName(alternativeNames[i]);
+                return getFundByName(alternativeNames[i]);
             }
             catch (final NoSuchElementException e) {
             }
         }
-        throw new NoSuchElementException(String.format("Can't find Avanza found '%s'", name));
+        throw new NoSuchElementException(String.format("Can't find Avanza fund '%s'", name));
     }
 
-    private static AvanzaFound getFoundByName(final String name) throws IOException {
-        if (!FOUNDS.containsKey(name)) {
+    private static AvanzaFund getFundByName(final String name) throws IOException {
+        if (!FUNDS.containsKey(name)) {
             final String fileName = String.format("avanza_%s", name);
-            AvanzaFound found = FileCache.load(fileName, AvanzaFound.class
+            AvanzaFund fund = FileCache.load(fileName, AvanzaFund.class
             );
-            if (found == null) {
+            if (fund == null) {
                 final String id = getId(name);
-                found = HTTP.get(String.format("%s/fund/guide/%s", BASE, id),
-                        AvanzaFound.class
+                fund = HTTP.get(String.format("%s/fund/guide/%s", BASE, id),
+                        AvanzaFund.class
                 );
-                FileCache.store(fileName, found);
+                FileCache.store(fileName, fund);
             }
-            FOUNDS.put(name, found);
+            FUNDS.put(name, fund);
         }
-        return FOUNDS.get(name);
+        return FUNDS.get(name);
     }
 
     private static String getId(final String name) throws IOException {

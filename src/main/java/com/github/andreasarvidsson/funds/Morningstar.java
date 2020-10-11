@@ -1,9 +1,9 @@
-package com.github.andreasarvidsson.founds;
+package com.github.andreasarvidsson.funds;
 
-import com.github.andreasarvidsson.founds.util.HTTP;
+import com.github.andreasarvidsson.funds.util.HTTP;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.andreasarvidsson.founds.util.FileCache;
+import com.github.andreasarvidsson.funds.util.FileCache;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -24,44 +24,44 @@ public abstract class Morningstar {
     public static boolean DISABLE = false;
 
     private static final String BASE = "https://www.morningstar.se/se";
-    private static final Map<String, MorningstarFound> FOUNDS = new HashMap();
+    private static final Map<String, MorningstarFund> FUNDS = new HashMap();
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    public static MorningstarFound getFound(final String name, final String... alternativeNames) throws IOException {
+    public static MorningstarFund getFund(final String name, final String... alternativeNames) throws IOException {
         if (DISABLE) {
             return null;
         }
         try {
-            return getFoundByName(name);
+            return getFundByName(name);
         }
         catch (final NoSuchElementException e) {
         }
         for (int i = 0; i < alternativeNames.length; ++i) {
             try {
-                return getFoundByName(alternativeNames[i]);
+                return getFundByName(alternativeNames[i]);
             }
             catch (final NoSuchElementException e) {
             }
         }
-        throw new NoSuchElementException(String.format("Can't find Morningstar found '%s'", name));
+        throw new NoSuchElementException(String.format("Can't find Morningstar fund '%s'", name));
     }
 
-    private static MorningstarFound getFoundByName(final String name) throws IOException {
-        if (!FOUNDS.containsKey(name)) {
+    private static MorningstarFund getFundByName(final String name) throws IOException {
+        if (!FUNDS.containsKey(name)) {
             final String fileName = String.format("morningstar_%s", name);
-            MorningstarFound found = FileCache.load(fileName, MorningstarFound.class);
-            if (found == null) {
+            MorningstarFund fund = FileCache.load(fileName, MorningstarFund.class);
+            if (fund == null) {
                 final String id = getId(name);
-                found = getFoundByID(id);
-                FileCache.store(fileName, found);
+                fund = getFundByID(id);
+                FileCache.store(fileName, fund);
             }
-            FOUNDS.put(name, found);
+            FUNDS.put(name, fund);
         }
-        return FOUNDS.get(name);
+        return FUNDS.get(name);
     }
 
-    private static MorningstarFound getFoundByID(final String id) throws IOException {
-        final MorningstarFound res = new MorningstarFound();
+    private static MorningstarFund getFundByID(final String id) throws IOException {
+        final MorningstarFund res = new MorningstarFund();
         final Document doc = HTTP.getDocument(String.format(
                 "%s/funds/snapshot/snapshot.aspx?id=%s&tab=3",
                 BASE, id

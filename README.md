@@ -1,6 +1,6 @@
-# Founds
+# Funds
 
-**Compare found portfolios**
+**Compare fund portfolios**
 
 Create different found portfolios and compare them. Presents results as a table with useful metrics.
 

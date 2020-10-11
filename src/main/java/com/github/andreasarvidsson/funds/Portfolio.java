@@ -1,7 +1,7 @@
-package com.github.andreasarvidsson.founds;
+package com.github.andreasarvidsson.funds;
 
-import com.github.andreasarvidsson.founds.util.Sum;
-import com.github.andreasarvidsson.founds.util.Values;
+import com.github.andreasarvidsson.funds.util.Sum;
+import com.github.andreasarvidsson.funds.util.Values;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class Portfolio {
 
-    public final List<FoundData> founds = new ArrayList();
+    public final List<FundData> funds = new ArrayList();
     public final Values companiesSize = new Values();
     public final Values countries = new Values();
     public final Values sectors = new Values();
@@ -25,28 +25,28 @@ public class Portfolio {
 
     public Portfolio(
             final String name,
-            final SelectedFound... selectedFounds) throws IOException {
-        this(name, Arrays.asList(selectedFounds));
+            final SelectedFund... selectedFunds) throws IOException {
+        this(name, Arrays.asList(selectedFunds));
     }
 
     public Portfolio(
             final String name,
-            final List<SelectedFound> selectedFounds) throws IOException {
+            final List<SelectedFund> selectedFunds) throws IOException {
         this.name = name;
-        for (final SelectedFound sf : selectedFounds) {
+        for (final SelectedFund sf : selectedFunds) {
             percentageSum += sf.percentage;
         }
-        for (final SelectedFound sd : selectedFounds) {
-            founds.add(new FoundData(
+        for (final SelectedFund sd : selectedFunds) {
+            funds.add(new FundData(
                     sd.percentage,
                     sd.percentage / percentageSum,
-                    Avanza.getFound(sd.name, sd.alternativeNames),
-                    Morningstar.getFound(sd.name, sd.alternativeNames),
-                    sd.useSavr ? SAVR.getFound(sd.name, sd.alternativeNames) : null
+                    Avanza.getFund(sd.name, sd.alternativeNames),
+                    Morningstar.getFund(sd.name, sd.alternativeNames),
+                    sd.useSavr ? SAVR.getFund(sd.name, sd.alternativeNames) : null
             ));
         }
         percentageSum *= 100;
-        for (final FoundData fd : founds) {
+        for (final FundData fd : funds) {
             avgFee += fd.getFee() * fd.percentageNormalized;
             risk += fd.avanza.risk * fd.percentageNormalized;
             if (fd.avanza.sharpeRatio != null) {

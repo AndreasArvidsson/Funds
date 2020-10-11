@@ -1,4 +1,4 @@
-package com.github.andreasarvidsson.founds;
+package com.github.andreasarvidsson.funds;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.github.andreasarvidsson.founds;
+package com.github.andreasarvidsson.funds;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -13,7 +13,7 @@ import java.util.Map;
  * @author Andreas Arvidsson
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AvanzaFound {
+public class AvanzaFund {
 
     public String name;
     public double productFee;

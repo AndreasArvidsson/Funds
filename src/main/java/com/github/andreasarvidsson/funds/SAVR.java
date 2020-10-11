@@ -1,7 +1,7 @@
-package com.github.andreasarvidsson.founds;
+package com.github.andreasarvidsson.funds;
 
-import com.github.andreasarvidsson.founds.util.HTTP;
-import com.github.andreasarvidsson.founds.util.FileCache;
+import com.github.andreasarvidsson.funds.util.HTTP;
+import com.github.andreasarvidsson.funds.util.FileCache;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,41 +16,41 @@ import org.jsoup.nodes.Element;
 public abstract class SAVR {
 
     private static final String BASE = "https://savr.com/sv";
-    private static final Map<String, SavrFound> FOUNDS = new HashMap();
+    private static final Map<String, SavrFund> FUNDS = new HashMap();
     private static Map<String, String> URLS_MAP;
 
-    public static SavrFound getFound(final String name, final String... alternativeNames) throws IOException {
+    public static SavrFund getFund(final String name, final String... alternativeNames) throws IOException {
         try {
-            return getFoundByName(name);
+            return getFundByName(name);
         }
         catch (final NoSuchElementException e) {
         }
         for (int i = 0; i < alternativeNames.length; ++i) {
             try {
-                return getFoundByName(alternativeNames[i]);
+                return getFundByName(alternativeNames[i]);
             }
             catch (final NoSuchElementException e) {
             }
         }
-        throw new NoSuchElementException(String.format("Can't find SAVR found '%s'", name));
+        throw new NoSuchElementException(String.format("Can't find SAVR fund '%s'", name));
     }
 
-    private static SavrFound getFoundByName(final String name) throws IOException {
-        if (!FOUNDS.containsKey(name)) {
+    private static SavrFund getFundByName(final String name) throws IOException {
+        if (!FUNDS.containsKey(name)) {
             final String fileName = String.format("savr_%s", name);
-            SavrFound found = FileCache.load(fileName, SavrFound.class);
-            if (found == null) {
+            SavrFund fund = FileCache.load(fileName, SavrFund.class);
+            if (fund == null) {
                 final String url = getUrl(name);
-                found = getFoundByURL(url);
-                FileCache.store(fileName, found);
+                fund = getFundByURL(url);
+                FileCache.store(fileName, fund);
             }
-            FOUNDS.put(name, found);
+            FUNDS.put(name, fund);
         }
-        return FOUNDS.get(name);
+        return FUNDS.get(name);
     }
 
-    private static SavrFound getFoundByURL(final String url) throws IOException {
-        final SavrFound res = new SavrFound();
+    private static SavrFund getFundByURL(final String url) throws IOException {
+        final SavrFund res = new SavrFund();
         final Document doc = HTTP.getDocument(url);
         final Element detailsNode = doc.select("div.fundDetails").first();
         final Element feeNode = detailsNode.child(0).child(1);

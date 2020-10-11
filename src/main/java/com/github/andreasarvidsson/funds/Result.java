@@ -1,10 +1,10 @@
-package com.github.andreasarvidsson.founds;
+package com.github.andreasarvidsson.funds;
 
-import com.github.andreasarvidsson.founds.util.AsciiTable;
-import com.github.andreasarvidsson.founds.util.Comparison;
-import com.github.andreasarvidsson.founds.util.Excel;
-import com.github.andreasarvidsson.founds.util.Excel.ExcelTable;
-import com.github.andreasarvidsson.founds.util.Values;
+import com.github.andreasarvidsson.funds.util.AsciiTable;
+import com.github.andreasarvidsson.funds.util.Comparison;
+import com.github.andreasarvidsson.funds.util.Excel;
+import com.github.andreasarvidsson.funds.util.Excel.ExcelTable;
+import com.github.andreasarvidsson.funds.util.Values;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class Result {
     private final long t0 = System.currentTimeMillis();
 
     public void add(final Portfolio portfolio) {
-        addFoundsTable(portfolio);
+        addFundsTable(portfolio);
         addStatsTable(portfolio);
     }
 
@@ -123,7 +123,7 @@ public class Result {
         if (!excel.hasTable("Om")) {
             final ExcelTable excelTable = excel.getTable("Om");
             excelTable.addRow(Arrays.asList("Skapad av", "Andreas Arvidsson"));
-            excelTable.addRow(Arrays.asList("Källa", "https://github.com/AndreasArvidsson/Founds"));
+            excelTable.addRow(Arrays.asList("Källa", "https://github.com/AndreasArvidsson/Funds"));
             excelTable.autoSizeColumns(2);
         }
 
@@ -132,7 +132,7 @@ public class Result {
         )));
     }
 
-    private void addFoundsTable(final Portfolio portfolio) {
+    private void addFundsTable(final Portfolio portfolio) {
         final AsciiTable asciiTable = new AsciiTable();
         final ExcelTable excelTable = excel.getTable("Fonder");
 
@@ -140,15 +140,15 @@ public class Result {
         excelTable.addTitle(getExcelTitle(portfolio.name));
         excelTable.addRow();
 
-        final List<String> headersRow = getFoundsHeadersRow(portfolio);
+        final List<String> headersRow = getFundsHeadersRow(portfolio);
         asciiTable.addRow(headersRow);
         asciiTable.addHR();
         excelTable.addRow(headersRow);
         excelTable.addHR();
 
-        final List<List<String>> foundRows = getFoundRows(portfolio);
-        asciiTable.addRows(foundRows);
-        excelTable.addRows(foundRows);
+        final List<List<String>> fundRows = getFundRows(portfolio);
+        asciiTable.addRows(fundRows);
+        excelTable.addRows(fundRows);
 
         final List<String> sumRow = getSumRow(portfolio);
         asciiTable.addHR();
@@ -196,7 +196,7 @@ public class Result {
         return String.format("> %s", name);
     }
 
-    private List<String> getFoundsHeadersRow(final Portfolio p) {
+    private List<String> getFundsHeadersRow(final Portfolio p) {
         final List<String> res = new ArrayList();
         res.addAll(Arrays.asList("Namn", "Andel (%)", "Avgift (%)", "Risk",
                 Headers.STANDARD_DEVIATION, Headers.SHARPE_RATIO,
@@ -215,19 +215,19 @@ public class Result {
         return res;
     }
 
-    private List<List<String>> getFoundRows(final Portfolio p) {
+    private List<List<String>> getFundRows(final Portfolio p) {
         final List<List<String>> res = new ArrayList();
-        p.founds.forEach(fd -> {
+        p.funds.forEach(fd -> {
             final List<String> row = new ArrayList();
-            final AvanzaFound found = fd.avanza;
+            final AvanzaFund fund = fd.avanza;
             row.addAll(Arrays.asList(
-                    found.name,
+                    fund.name,
                     format(fd.percentage * 100),
                     format(fd.getFee()),
-                    Integer.toString(found.risk),
-                    found.standardDeviation != null ? format(found.standardDeviation) : MISSING,
-                    found.sharpeRatio != null ? format(found.sharpeRatio) : MISSING,
-                    String.join(", ", found.categories),
+                    Integer.toString(fund.risk),
+                    fund.standardDeviation != null ? format(fund.standardDeviation) : MISSING,
+                    fund.sharpeRatio != null ? format(fund.sharpeRatio) : MISSING,
+                    String.join(", ", fund.categories),
                     fd.avanza.hasRegion(Regions.SWEDEN) ? format(fd.avanza.getRegion(Regions.SWEDEN)) : MISSING,
                     fd.avanza.hasRegion(Regions.ASIA) ? format(fd.avanza.getRegion(Regions.ASIA)) : MISSING
             ));
@@ -244,8 +244,8 @@ public class Result {
                 }
             }
             Headers.DEVELOPMENT_TITLES.forEach(key -> {
-                if (found.hasDevelopment(key)) {
-                    row.add(format(found.getDevelopment(key)));
+                if (fund.hasDevelopment(key)) {
+                    row.add(format(fund.getDevelopment(key)));
                 }
                 else {
                     row.add(MISSING);
@@ -377,9 +377,9 @@ public class Result {
         final List<List<String>> res = new ArrayList();
         res.add(new ArrayList(Arrays.asList(
                 "# Fonder",
-                Integer.toString(p1.founds.size()),
-                Integer.toString(p2.founds.size()),
-                Integer.toString(p2.founds.size() - p1.founds.size()),
+                Integer.toString(p1.funds.size()),
+                Integer.toString(p2.funds.size()),
+                Integer.toString(p2.funds.size() - p1.funds.size()),
                 SPACE
         )));
         addRow(
@@ -401,7 +401,7 @@ public class Result {
 
     private List<List<String>> getRankingsRows(final Rankings rankings) {
         final List<List<String>> res = new ArrayList();
-        rankings.founds.forEach(fr -> {
+        rankings.funds.forEach(fr -> {
             final List<String> row = new ArrayList();
             row.add(fr.avanza.name);
             fr.values.forEach(p -> {

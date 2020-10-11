@@ -1,24 +1,24 @@
-package com.github.andreasarvidsson.founds;
+package com.github.andreasarvidsson.funds;
 
 /**
  *
  * @author Andreas Arvidsson
  */
-public class SelectedFound {
+public class SelectedFund {
 
     final String name;
     final String[] alternativeNames;
     final double percentage;
     final boolean useSavr;
 
-    public SelectedFound(
+    public SelectedFund(
             final double percentage,
             final String name,
             final String... alternativeNames) {
         this(percentage, false, name, alternativeNames);
     }
 
-    public SelectedFound(
+    public SelectedFund(
             final double percentage,
             final boolean useSavr,
             final String name,

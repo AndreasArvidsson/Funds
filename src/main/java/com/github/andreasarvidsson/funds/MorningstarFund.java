@@ -1,10 +1,10 @@
-package com.github.andreasarvidsson.founds;
+package com.github.andreasarvidsson.funds;
 
 /**
  *
  * @author Andreas Arvidsson
  */
-public class MorningstarFound {
+public class MorningstarFund {
 
     public double largeCompanies, middleCompanies, smallCompanies;
 
