@@ -58,7 +58,7 @@ public class Result {
 
     public void compare(final Portfolio p1, final Portfolio p2) {
         final AsciiTable asciiTable = new AsciiTable();
-        final ExcelTable excelTable = excel.getTable("Jämnförelse");
+        final ExcelTable excelTable = excel.getTable("Jämförelse");
 
         final String title = String.format("%s vs %s", p1.name, p2.name);
         sb.append(getAsciiTitle(title));

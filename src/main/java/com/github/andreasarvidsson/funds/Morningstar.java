@@ -23,7 +23,7 @@ public abstract class Morningstar {
 
     public static boolean DISABLE = false;
 
-    private static final String BASE = "https://www.morningstar.se/se";
+    private static final String BASE = "https://www.morningstar.se";
     private static final Map<String, MorningstarFund> FUNDS = new HashMap();
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -62,38 +62,41 @@ public abstract class Morningstar {
 
     private static MorningstarFund getFundByID(final String id) throws IOException {
         final MorningstarFund res = new MorningstarFund();
-        final Document doc = HTTP.getDocument(String.format(
-                "%s/funds/snapshot/snapshot.aspx?id=%s&tab=3",
-                BASE, id
-        ));
+//        final Document doc = HTTP.getDocument(String.format(
+//                "%s/Common/funds/snapshot/PortfolioSAL.aspx?IT=FO&Site=se&LANG=sv-SE&FC=%s",
+//                BASE, id
+//        ));
 
-        final Element div = doc.selectFirst("#portfolioEquityStyleDiv");
-        final Element td = div.selectFirst("td.data");
-        final Element table = td.select("table").get(1);
-        final Elements rows = table.select("tr");
-        rows.forEach(row -> {
-            final Elements cells = row.children();
-            if (cells.size() != 2) {
-                return;
-            }
-            final String title = cells.get(0).text();
-            final String value = cells.get(1).text().replace(",", ".");
-            if (value.equals("-")) {
-                return;
-            }
-            switch (title) {
-                case "Giganter":
-                case "Stora":
-                    res.largeCompanies += Double.parseDouble(value);
-                    break;
-                case "Medel":
-                    res.middleCompanies += Double.parseDouble(value);
-                    break;
-                case "Små":
-                case "Mikro":
-                    res.smallCompanies += Double.parseDouble(value);
-            }
-        });
+//        String a = doc.toString();
+
+//        final Element div = doc.selectFirst(".sal-component-body");
+//
+//        final Element td = div.selectFirst("td.data");
+//        final Element table = td.select("table").get(1);
+//        final Elements rows = table.select("tr");
+//        rows.forEach(row -> {
+//            final Elements cells = row.children();
+//            if (cells.size() != 2) {
+//                return;
+//            }
+//            final String title = cells.get(0).text();
+//            final String value = cells.get(1).text().replace(",", ".");
+//            if (value.equals("-")) {
+//                return;
+//            }
+//            switch (title) {
+//                case "Giganter":
+//                case "Stora":
+//                    res.largeCompanies += Double.parseDouble(value);
+//                    break;
+//                case "Medel":
+//                    res.middleCompanies += Double.parseDouble(value);
+//                    break;
+//                case "Små":
+//                case "Mikro":
+//                    res.smallCompanies += Double.parseDouble(value);
+//            }
+//        });
 
         return res;
     }
@@ -105,7 +108,7 @@ public abstract class Morningstar {
 
         final Document doc = HTTP.getDocument(
                 String.format(
-                        "%s/util/SecuritySearch.ashx?q=%s",
+                        "%s/se/util/SecuritySearch.ashx?q=%s",
                         BASE, encodedName
                 ));
         final Element body = doc.getElementsByTag("body").first();

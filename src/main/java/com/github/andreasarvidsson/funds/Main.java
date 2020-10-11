@@ -10,7 +10,8 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         //If true then additional data will NOT be fetched from Morningstar. Saves time.
-        //Morningstar.DISABLE = true;
+        //Disabled for now since morningstar updater their page and broke this feature.
+        Morningstar.DISABLE = true;
 
         //If true then fund fees will be fetched from SAVR. 
         //For SelectedFund passing this variable as second parameter.
