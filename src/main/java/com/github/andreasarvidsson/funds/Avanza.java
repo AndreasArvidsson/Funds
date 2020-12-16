@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
  */
 public abstract class Avanza {
 
-    private static final String BASE = "https://www.avanza.se/_cqbe";
+    private static final String BASE = "https://www.avanza.se";
     private static final Map<String, AvanzaFund> FUNDS = new HashMap();
 
     public static AvanzaFund getFund(final String name, final String... alternativeNames) throws IOException {
@@ -43,7 +43,7 @@ public abstract class Avanza {
             );
             if (fund == null) {
                 final String id = getId(name);
-                fund = HTTP.get(String.format("%s/fund/guide/%s", BASE, id),
+                fund = HTTP.get(String.format("%s/_api/fund-guide/guide/%s", BASE, id),
                         AvanzaFund.class
                 );
                 FileCache.store(fileName, fund);
@@ -57,7 +57,7 @@ public abstract class Avanza {
         final String encodedName = URLEncoder.encode(name, StandardCharsets.UTF_8.toString());
         final SearchResults searchResult = HTTP.get(
                 String.format(
-                        "%s/search/global-search/global-search-template?query=%s",
+                        "%s/_cqbe/search/global-search/global-search-template?query=%s",
                         BASE, encodedName
                 ),
                 SearchResults.class
