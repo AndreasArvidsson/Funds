@@ -20,6 +20,7 @@ public abstract class Regions {
             case "Kuba":
             case "Puerto Rico":
             case "Bermuda":
+            case "Brittiska Virgin Islands":
                 return "Nordamerika";
 
             case "Brasilien":
@@ -56,6 +57,7 @@ public abstract class Regions {
             case "Tjeckien":
             case "Rumänien":
             case "Grekland":
+            case "Liechtenstein":
                 return "Västeuropa exkl Sverige";
 
             case "Ryssland":
