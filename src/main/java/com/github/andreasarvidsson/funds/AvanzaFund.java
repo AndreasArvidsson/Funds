@@ -15,7 +15,7 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AvanzaFund {
 
-    public String name;
+    public String name, isin;
     public double productFee;
     public Double developmentOneDay, developmentOneMonth, developmentThreeMonths,
             developmentSixMonths, developmentThisYear, developmentOneYear,
