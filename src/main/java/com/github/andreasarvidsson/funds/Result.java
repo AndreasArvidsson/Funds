@@ -287,9 +287,10 @@ public class Result {
     private List<String> getStatsHeaderRow(final Portfolio p) {
         final List<String> res = new ArrayList();
         res.addAll(Arrays.asList(
+                "Innehav", "Andel (%)", SPACE,
+                "Bransch", "Andel (%)", SPACE,
                 "Land", "Andel (%)", SPACE,
-                "Region", "Andel (%)", SPACE,
-                "Bransch", "Andel (%)"
+                "Region", "Andel (%)"
         ));
         if (!p.companiesSize.isEmpty()) {
             res.addAll(Arrays.asList(
@@ -311,14 +312,17 @@ public class Result {
         for (int i = 0; i < size; ++i) {
             final List<String> row = new ArrayList();
             row.addAll(Arrays.asList(
+                    i < p.holdings.size() ? p.holdings.get(i).first() : "",
+                    i < p.holdings.size() ? format(p.holdings.get(i).second()) : "",
+                    SPACE,
+                    i < p.sectors.size() ? p.sectors.get(i).first() : "",
+                    i < p.sectors.size() ? format(p.sectors.get(i).second()) : "",
+                    SPACE,
                     i < p.countries.size() ? p.countries.get(i).first() : "",
                     i < p.countries.size() ? format(p.countries.get(i).second()) : "",
                     SPACE,
                     i < p.regions.size() ? p.regions.get(i).first() : "",
-                    i < p.regions.size() ? format(p.regions.get(i).second()) : "",
-                    SPACE,
-                    i < p.sectors.size() ? p.sectors.get(i).first() : "",
-                    i < p.sectors.size() ? format(p.sectors.get(i).second()) : ""
+                    i < p.regions.size() ? format(p.regions.get(i).second()) : ""
             ));
             if (!p.companiesSize.isEmpty()) {
                 //Add blank row between global and swedish companies.
