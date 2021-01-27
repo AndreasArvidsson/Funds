@@ -21,6 +21,7 @@ public abstract class Regions {
             case "Puerto Rico":
             case "Bermuda":
             case "Brittiska Virgin Islands":
+            case "Caymanöarna":
                 return "Nordamerika";
 
             case "Brasilien":
