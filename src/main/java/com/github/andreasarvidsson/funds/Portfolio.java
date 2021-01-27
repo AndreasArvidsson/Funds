@@ -18,6 +18,7 @@ public class Portfolio {
     public final Values countries = new Values();
     public final Values sectors = new Values();
     public final Values regions = new Values();
+    public final Values holdings = new Values();
     public final Sum sum = new Sum();
     public final Sum developments = new Sum();
     public final String name;
@@ -69,6 +70,9 @@ public class Portfolio {
             fd.avanza.sectorChartData.forEach(data -> {
                 sectors.add(data.name, data.y * fd.percentageNormalized);
             });
+            fd.avanza.holdingChartData.forEach(data -> {
+                holdings.add(data.name, data.y * fd.percentageNormalized);
+            });
             if (fd.morningstar != null) {
                 companiesSize.add("Stora bolag", fd.morningstar.largeCompanies * fd.percentageNormalized);
                 companiesSize.add("Medelstora bolag", fd.morningstar.middleCompanies * fd.percentageNormalized);
@@ -88,6 +92,7 @@ public class Portfolio {
         countries.compile(true);
         regions.compile(true);
         sectors.compile(true);
+        holdings.compile(true);
         companiesSize.compile();
         sum.normalize();
         developments.normalize();
