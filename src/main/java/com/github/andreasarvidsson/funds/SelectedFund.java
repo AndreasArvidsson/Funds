@@ -7,26 +7,38 @@ package com.github.andreasarvidsson.funds;
 public class SelectedFund {
 
     final String name;
-    final String[] alternativeNames;
-    final double percentage;
-    final boolean useSavr;
+    final Double percentage, fee;
 
     public SelectedFund(
             final double percentage,
             final String name,
-            final String... alternativeNames) {
-        this(percentage, false, name, alternativeNames);
+            final double fee) {
+        this.percentage = percentage / 100;
+        this.name = name;
+        this.fee = fee;
+    }
+
+    public SelectedFund(
+            final String name) {
+        this.percentage = null;
+        this.name = name;
+        this.fee = null;
+    }
+
+    public SelectedFund(
+            final String name,
+            final double fee) {
+        this.percentage = null;
+        this.name = name;
+        this.fee = fee;
     }
 
     public SelectedFund(
             final double percentage,
-            final boolean useSavr,
-            final String name,
-            final String... alternativeNames) {
-        this.name = name;
-        this.alternativeNames = alternativeNames;
+            final String name) {
         this.percentage = percentage / 100;
-        this.useSavr = useSavr;
+        this.name = name;
+        this.fee = null;
     }
 
 }

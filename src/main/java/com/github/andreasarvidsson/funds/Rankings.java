@@ -24,16 +24,16 @@ public class Rankings {
     public final List<FundRank> funds = new ArrayList();
     public final List<String> headers = new ArrayList();
 
-    public Rankings(final String name, final String... fundNames) throws IOException {
-        this(name, false, fundNames);
+    public Rankings(final String name, final SelectedFund... selectedFunds) throws IOException {
+        this(name, Arrays.asList(selectedFunds));
     }
 
-    public Rankings(final String name, final boolean useSavr, final String... fundNames) throws IOException {
+    public Rankings(final String name, final List<SelectedFund> selectedFunds) throws IOException {
         this.name = name;
-        for (final String fundName : fundNames) {
+        for (final SelectedFund sf : selectedFunds) {
             final FundRank fr = new FundRank(
-                    Avanza.getFund(fundName),
-                    useSavr ? SAVR.getFund(fundName) : null
+                    Avanza.getFund(sf.name),
+                    sf.fee
             );
             funds.add(fr);
         }
@@ -116,19 +116,18 @@ public class Rankings {
     public static class FundRank {
 
         public final AvanzaFund avanza;
-        public final SavrFund savr;
         public int points = 0;
         public final List<Pair<Integer, Double>> values = new ArrayList();
+        private final Double fee;
 
-        public FundRank(final AvanzaFund avanza, final SavrFund savr) {
+        public FundRank(final AvanzaFund avanza, final Double fee) {
             this.avanza = avanza;
-            this.savr = savr;
+            this.fee = fee;
         }
 
         public double getFee() {
-            return savr != null ? savr.fee : avanza.productFee;
+            return fee != null ? fee : avanza.productFee;
         }
-
     }
 
 }

@@ -41,9 +41,8 @@ public class Portfolio {
             funds.add(new FundData(
                     sd.percentage,
                     sd.percentage / percentageSum,
-                    Avanza.getFund(sd.name, sd.alternativeNames),
-                    Morningstar.getFund(sd.name, sd.alternativeNames),
-                    sd.useSavr ? SAVR.getFund(sd.name, sd.alternativeNames) : null
+                    Avanza.getFund(sd.name),
+                    sd.fee
             ));
         }
         percentageSum *= 100;
@@ -73,15 +72,15 @@ public class Portfolio {
             fd.avanza.holdingChartData.forEach(data -> {
                 holdings.add(data.name, data.y * fd.percentageNormalized);
             });
-            if (fd.morningstar != null) {
-                companiesSize.add("Stora bolag", fd.morningstar.largeCompanies * fd.percentageNormalized);
-                companiesSize.add("Medelstora bolag", fd.morningstar.middleCompanies * fd.percentageNormalized);
-                companiesSize.add("Små bolag", fd.morningstar.smallCompanies * fd.percentageNormalized);
-                final double swePercentage = fd.avanza.getRegion(Regions.SWEDEN) / 100;
-                companiesSize.add("Stora svenska bolag", fd.morningstar.largeCompanies * fd.percentageNormalized * swePercentage);
-                companiesSize.add("Medelstora svenska bolag", fd.morningstar.middleCompanies * fd.percentageNormalized * swePercentage);
-                companiesSize.add("Små svenska bolag", fd.morningstar.smallCompanies * fd.percentageNormalized * swePercentage);
-            }
+//            if (fd.morningstar != null) {
+//                companiesSize.add("Stora bolag", fd.morningstar.largeCompanies * fd.percentageNormalized);
+//                companiesSize.add("Medelstora bolag", fd.morningstar.middleCompanies * fd.percentageNormalized);
+//                companiesSize.add("Små bolag", fd.morningstar.smallCompanies * fd.percentageNormalized);
+//                final double swePercentage = fd.avanza.getRegion(Regions.SWEDEN) / 100;
+//                companiesSize.add("Stora svenska bolag", fd.morningstar.largeCompanies * fd.percentageNormalized * swePercentage);
+//                companiesSize.add("Medelstora svenska bolag", fd.morningstar.middleCompanies * fd.percentageNormalized * swePercentage);
+//                companiesSize.add("Små svenska bolag", fd.morningstar.smallCompanies * fd.percentageNormalized * swePercentage);
+//            }
         }
         if (!companiesSize.isEmpty() && regions.has(Regions.SWEDEN)) {
             final double sweSum = regions.get(Regions.SWEDEN) * 0.01;

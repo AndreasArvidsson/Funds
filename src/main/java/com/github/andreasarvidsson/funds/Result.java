@@ -77,33 +77,49 @@ public class Result {
         asciiTable.addRow();
         excelTable.addRow();
 
-        final List<String> headersRow2 = getCompareHeadersRow(p1, p2, "Land", "Region");
+        final List<String> headersRow2 = getCompareHeadersRow(p1, p2, "Innehav", "Bransch");
         asciiTable.addRow(headersRow2);
         asciiTable.addHR();
         excelTable.addRow(headersRow2);
         excelTable.addHR();
 
         final List<List<String>> rows2 = new ArrayList();
-        compareValues(rows2, true, p1.countries, p2.countries);
-        compareValues(rows2, false, p1.regions, p2.regions);
+        compareValues(rows2, true, p1.holdings, p2.holdings);
+        compareValues(rows2, true, p1.sectors, p2.sectors);
         asciiTable.addRows(rows2);
         excelTable.addRows(rows2);
         asciiTable.addRow();
         excelTable.addRow();
 
-        final List<String> headersRow3 = getCompareHeadersRow(p1, p2, "Bransch", "Utveckling");
+        final List<String> headersRow3 = getCompareHeadersRow(p1, p2, "Land", "Region");
         asciiTable.addRow(headersRow3);
         asciiTable.addHR();
         excelTable.addRow(headersRow3);
         excelTable.addHR();
 
         final List<List<String>> rows3 = new ArrayList();
-        compareValues(rows3, true, p1.sectors, p2.sectors);
-        compareDevelopments(rows3, false, p1, p2);
+        compareValues(rows3, true, p1.countries, p2.countries);
+        compareValues(rows3, false, p1.regions, p2.regions);
         asciiTable.addRows(rows3);
         excelTable.addRows(rows3);
         asciiTable.addRow();
         excelTable.addRow();
+
+        //TODO missing size info for now
+        //        if (!p1.companiesSize.isEmpty() && !p2.companiesSize.isEmpty()) {
+//            res.addAll(Arrays.asList(
+//                    "Storlek",
+//                    String.format("%s (%%)", p1.name),
+//                    String.format("%s (%%)", p2.name),
+//                    "Skillnad (%)"
+//            ));
+//        }
+//        else {
+//            res.addAll(Arrays.asList("", "", "", ""));
+//        }
+//  if (!p1.companiesSize.isEmpty() && !p2.companiesSize.isEmpty()) {
+//            compareValues(res, false, p1.companiesSize, p2.companiesSize);
+//        }
 
         sb.append(asciiTable.toString());
         excelTable.autoSizeColumns(headersRow1.size());
@@ -232,16 +248,17 @@ public class Result {
                     fd.avanza.hasRegion(Regions.ASIA) ? format(fd.avanza.getRegion(Regions.ASIA)) : MISSING
             ));
             if (!p.companiesSize.isEmpty()) {
-                if (fd.morningstar != null) {
-                    row.addAll(Arrays.asList(
-                            format(fd.morningstar.largeCompanies),
-                            format(fd.morningstar.middleCompanies),
-                            format(fd.morningstar.smallCompanies)
-                    ));
-                }
-                else {
-                    row.addAll(Arrays.asList("", "", ""));
-                }
+                //TODO missing size info for now
+//                if (fd.morningstar != null) {
+//                    row.addAll(Arrays.asList(
+//                            format(fd.morningstar.largeCompanies),
+//                            format(fd.morningstar.middleCompanies),
+//                            format(fd.morningstar.smallCompanies)
+//                    ));
+//                }
+//                else {
+                row.addAll(Arrays.asList("", "", ""));
+//                }
             }
             Headers.DEVELOPMENT_TITLES.forEach(key -> {
                 if (fund.hasDevelopment(key)) {
@@ -345,19 +362,13 @@ public class Result {
 
     private List<String> getCompareHeadersRow(final Portfolio p1, final Portfolio p2) {
         final List<String> res = new ArrayList(Arrays.asList(
-                "", p1.name, p2.name, "Skillnad", SPACE
+                "", p1.name, p2.name, "Skillnad",
+                SPACE,
+                "Utveckling",
+                String.format("%s (%%)", p1.name),
+                String.format("%s (%%)", p2.name),
+                "Skillnad (%)"
         ));
-        if (!p1.companiesSize.isEmpty() && !p2.companiesSize.isEmpty()) {
-            res.addAll(Arrays.asList(
-                    "Storlek",
-                    String.format("%s (%%)", p1.name),
-                    String.format("%s (%%)", p2.name),
-                    "Skillnad (%)"
-            ));
-        }
-        else {
-            res.addAll(Arrays.asList("", "", "", ""));
-        }
         return res;
     }
 
@@ -397,9 +408,7 @@ public class Result {
         );
         addRow(res, true, 4, Headers.STANDARD_DEVIATION, p1.sum.get(Headers.STANDARD_DEVIATION), p2.sum.get(Headers.STANDARD_DEVIATION));
         addRow(res, true, 5, Headers.SHARPE_RATIO, p1.sum.get(Headers.SHARPE_RATIO), p2.sum.get(Headers.SHARPE_RATIO));
-        if (!p1.companiesSize.isEmpty() && !p2.companiesSize.isEmpty()) {
-            compareValues(res, false, p1.companiesSize, p2.companiesSize);
-        }
+        compareDevelopments(res, false, p1, p2);
         return res;
     }
 
