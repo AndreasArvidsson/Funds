@@ -24,6 +24,7 @@ public class AvanzaFund {
     public List<String> categories;
     public List<ChartData> countryChartData, holdingChartData,
             sectorChartData, regionChartData;
+    public final Map<String, ChartData> countryMap = new HashMap();
     public final Map<String, ChartData> regionsMap = new HashMap();
     private Map<String, Double> developmentMap;
 
@@ -37,10 +38,22 @@ public class AvanzaFund {
                 cd.y = 0.0;
                 regionsMap.put(regionName, cd);
             }
+            countryMap.put(chartData.name, chartData);
             regionsMap.get(regionName).y += chartData.y;
         });
         regionChartData = new ArrayList(regionsMap.values());
         Collections.sort(regionChartData, (a, b) -> Double.compare(b.y, a.y));
+    }
+
+    public boolean hasCountry(final String countryName) {
+        return countryMap.containsKey(countryName);
+    }
+
+    public double getCountry(final String countryName) {
+        if (countryMap.containsKey(countryName)) {
+            return countryMap.get(countryName).y;
+        }
+        return 0.0;
     }
 
     public boolean hasRegion(final String regionName) {

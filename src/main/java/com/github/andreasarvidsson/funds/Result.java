@@ -120,7 +120,6 @@ public class Result {
 //  if (!p1.companiesSize.isEmpty() && !p2.companiesSize.isEmpty()) {
 //            compareValues(res, false, p1.companiesSize, p2.companiesSize);
 //        }
-
         sb.append(asciiTable.toString());
         excelTable.autoSizeColumns(headersRow1.size());
     }
@@ -216,7 +215,7 @@ public class Result {
         final List<String> res = new ArrayList();
         res.addAll(Arrays.asList("Namn", "Andel (%)", "Avgift (%)", "Risk",
                 Headers.STANDARD_DEVIATION, Headers.SHARPE_RATIO,
-                "Kategorier", "Sverige (%)", "Asien (%)"
+                "Kategorier", "Sverige (%)", "USA (%)", "Asien (%)"
         ));
         if (!p.companiesSize.isEmpty()) {
             res.addAll(Arrays.asList(
@@ -244,7 +243,8 @@ public class Result {
                     fund.standardDeviation != null ? format(fund.standardDeviation) : MISSING,
                     fund.sharpeRatio != null ? format(fund.sharpeRatio) : MISSING,
                     String.join(", ", fund.categories),
-                    fd.avanza.hasRegion(Regions.SWEDEN) ? format(fd.avanza.getRegion(Regions.SWEDEN)) : MISSING,
+                    fd.avanza.hasCountry(Regions.SWEDEN) ? format(fd.avanza.getCountry(Regions.SWEDEN)) : MISSING,
+                    fd.avanza.hasCountry(Regions.USA) ? format(fd.avanza.getCountry(Regions.USA)) : MISSING,
                     fd.avanza.hasRegion(Regions.ASIA) ? format(fd.avanza.getRegion(Regions.ASIA)) : MISSING
             ));
             if (!p.companiesSize.isEmpty()) {
@@ -283,7 +283,8 @@ public class Result {
                 format(p.sum.get(Headers.STANDARD_DEVIATION)),
                 format(p.sum.get(Headers.SHARPE_RATIO)),
                 "",
-                p.regions.has(Regions.SWEDEN) ? format(p.regions.get(Regions.SWEDEN)) : MISSING,
+                p.countries.has(Regions.SWEDEN) ? format(p.countries.get(Regions.SWEDEN)) : MISSING,
+                p.countries.has(Regions.USA) ? format(p.countries.get(Regions.USA)) : MISSING,
                 p.regions.has(Regions.ASIA) ? format(p.regions.get(Regions.ASIA)) : MISSING
         ));
         if (!p.companiesSize.isEmpty()) {

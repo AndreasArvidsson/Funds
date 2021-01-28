@@ -7,6 +7,7 @@ package com.github.andreasarvidsson.funds;
 public abstract class Regions {
 
     public static final String SWEDEN = "Sverige";
+    public static final String USA = "USA";
     public static final String ASIA = "Asien exkl Japan";
 
     public static String get(final String country) {
