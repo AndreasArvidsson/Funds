@@ -421,7 +421,7 @@ public class Result {
             fr.values.forEach(p -> {
                 row.add(String.format("%d (%s)", p.first(), format(p.second())));
             });
-            row.add(String.format("%d", fr.points));
+            row.add(format(fr.mean));
             res.add(row);
         });
         return res;
@@ -431,7 +431,7 @@ public class Result {
         final List<String> res = new ArrayList();
         res.add("");
         res.addAll(rankings.headers);
-        res.add("Poäng");
+        res.add("Medel");
         return res;
     }
 

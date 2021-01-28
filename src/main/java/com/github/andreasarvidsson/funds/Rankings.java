@@ -1,5 +1,6 @@
 package com.github.andreasarvidsson.funds;
 
+import com.github.andreasarvidsson.funds.util.Mean;
 import com.github.andreasarvidsson.funds.util.Pair;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,7 +51,18 @@ public class Rankings {
             }
             addValues(DEV_HEADERS.get(i), values);
         }
-        Collections.sort(funds, (a, b) -> Integer.compare(b.points, a.points));
+        calculatePoints();
+        Collections.sort(funds, (a, b) -> Double.compare(a.mean, b.mean));
+    }
+
+    private void calculatePoints() {
+        funds.forEach(fr -> {
+            final Mean mean = new Mean();
+            for (final Pair<Integer, Double> p : fr.values) {
+                mean.add(p.first());
+            }
+            fr.mean = mean.geometric();
+        });
     }
 
     private void addValues(final String header, final List<Pair<FundRank, Double>> values) {
@@ -58,8 +70,7 @@ public class Rankings {
         for (int j = 0; j < values.size(); ++j) {
             final Pair<FundRank, Double> p = values.get(j);
             final FundRank fr = p.first();
-            final int points = j + 1;
-            fr.points += points;
+            final int points = values.size() - j;
             fr.values.add(new Pair(points, p.second()));
         }
     }
@@ -116,7 +127,7 @@ public class Rankings {
     public static class FundRank {
 
         public final AvanzaFund avanza;
-        public int points = 0;
+        public double mean;
         public final List<Pair<Integer, Double>> values = new ArrayList();
         private final Double fee;
 
