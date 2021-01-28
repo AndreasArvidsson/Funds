@@ -477,8 +477,8 @@ public class Result {
             final boolean first,
             final int i,
             final String title,
-            final double val1,
-            final double val2) {
+            final Double val1,
+            final Double val2) {
         if (i >= rows.size()) {
             rows.add(new ArrayList());
             if (!first) {
@@ -487,9 +487,9 @@ public class Result {
         }
         rows.get(i).addAll(Arrays.asList(
                 title,
-                format(val1),
-                format(val2),
-                format(val2 - val1)
+                val1 != null ? format(val1) : MISSING,
+                val2 != null ? format(val2) : MISSING,
+                val1 != null && val2 != null ? format(val2 - val1) : MISSING
         ));
         if (first) {
             rows.get(i).add(SPACE);

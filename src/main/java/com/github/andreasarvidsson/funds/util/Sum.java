@@ -31,8 +31,11 @@ public class Sum {
         return sum.containsKey(key);
     }
 
-    public double get(final String key) {
-        return sum.get(key);
+    public Double get(final String key) {
+        if (has(key)) {
+            return sum.get(key);
+        }
+        return null;
     }
 
 }
