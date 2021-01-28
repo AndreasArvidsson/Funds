@@ -85,7 +85,7 @@ public class Result {
 
         final List<List<String>> rows2 = new ArrayList();
         compareValues(rows2, true, p1.holdings, p2.holdings);
-        compareValues(rows2, true, p1.sectors, p2.sectors);
+        compareValues(rows2, false, p1.sectors, p2.sectors);
         asciiTable.addRows(rows2);
         excelTable.addRows(rows2);
         asciiTable.addRow();
