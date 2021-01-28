@@ -4,34 +4,34 @@
 
 Create different found portfolios and compare them. Presents results as a table with useful metrics.
 
-* Fetches data from Avanza, Morningstar and SAVR.
+* Fetches data from Avanza
 * No GUI. Just edit Main.java and run application.
 * Excel export. Results stored in "excel" folder.
 
 ```
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Pension >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-Namn                                       Andel (%)   Avgift (%)   Risk   Stdav (%)   Sharpekvot   Kategorier          Sverige (%)   Asien (%)   Stora (%)   Medelstora (%)   Små (%)   1 d     1 m     3 m     6 m      i år     1 år    3 år    5 år 
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-Avanza Global                              64,00       0,10         5      -           -            Global, Mix bolag   0,89          1,41        84,32       15,44            0,23      -0,71   -1,27   3,70    -10,17   -5,88    -0,57   -       -    
-Handelsbanken Gl Småbolag Ind Cri A1 SEK   8,00        0,71         5      -           -            Global, Småbolag    1,42          1,63        1,14        60,99            37,88     -1,62   -0,79   7,63    -14,19   -10,79   -5,54   -       -    
-Spiltan Aktiefond Investmentbolag          10,00       0,28         6      16,14       0,62         Sverige             99,64         -           30,16       64,64            5,21      -2,42   9,15    19,39   3,31     7,21     19,67   42,74   78,22
-SEB Sverige Indexfond                      8,00        0,26         6      16,31       0,49         Sverige             94,04         -           48,20       31,48            20,32     0,12    6,94    19,63   1,86     3,44     13,99   32,45   49,90
-Avanza Emerging Markets                    5,00        0,29         6      -           -            Tillväxtmarknader   -             77,99       86,65       12,07            1,28      0,15    1,97    7,71    -9,79    -6,93    -2,25   -       -    
-Swedbank Robur Access Asien                5,00        0,35         6      15,22       0,55         Asien ex Japan      -             99,53       92,66       7,29             0,05      -2,36   -0,42   4,30    -6,73    -4,23    1,25    20,78   40,29
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-                                           100,00      0,20         5,28   16,00       0,56                             18,17         9,91        69,89       24,71            5,39      -0,92   0,67    7,09    -7,99    -4,19    2,23    34,39   60,12
+Namn                                       Andel (%)   Avgift (%)   Risk   Stdav (%)   Sharpekvot   Kategorier                     Sverige (%)   USA (%)   Asien (%)   1 d     1 m     3 m     6 m     i år    1 år    3 år    5 år  
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Länsförsäkringar Global Indexnära          64,00       0,22         5      16,29       0,72         Global, Mix bolag              0,99          65,53     1,76        -0,98   3,18    9,40    13,59   3,22    2,49    36,69   90,36 
+Handelsbanken Gl Småbolag Ind Cri A1 SEK   8,00        0,71         6      20,35       0,56         Global, Små/medelstora bolag   1,25          63,08     1,55        -1,59   3,44    16,29   24,24   4,42    7,69    36,37   -     
+Spiltan Aktiefond Investmentbolag          12,00       0,27         6      17,08       1,11         Sverige                        97,93         -         -           -0,93   5,14    14,04   20,35   3,32    28,38   65,96   143,80
+PLUS Allabolag Sverige Index               6,00        0,22         5      -           -            Sverige                        94,47         0,34      -           1,16    5,76    14,62   -       4,67    -       -       -     
+Avanza Emerging Markets                    5,00        0,29         6      -           -            Tillväxtmarknader              -             0,23      79,73       -1,64   10,48   16,65   23,31   9,09    9,37    -       -     
+Swedbank Robur Access Asien A              5,00        0,35         6      14,88       0,61         Asien ex Japan                 -             0,07      99,88       0,20    12,44   16,55   26,83   10,69   17,83   33,60   121,39
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                           100,00      0,28         5,30   16,68       0,75                                        18,15         47,02     10,23       -0,87   4,42    11,54   16,58   4,08    7,42    40,44   100,19
 
-Land             Andel (%)      |      Region                       Andel (%)      |      Bransch              Andel (%)      |      Storlek                    Andel (%)
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-USA              46,63          |      Nordamerika                  48,94          |      Finans               22,98          |      Stora bolag                69,89    
-Sverige          18,17          |      Sverige                      18,17          |      Teknik               15,59          |      Medelstora bolag           24,71    
-Japan            6,04           |      Västeuropa exkl Sverige      14,11          |      Sjukvård             11,70          |      Små bolag                  5,39     
-Kina             4,32           |      Asien exkl Japan             9,91           |      Industri             11,50          |   
-Storbritannien   3,72           |      Japan                        6,04           |      Konsument, cyklisk   9,65           |      Stora svenska bolag        39,15    
-Schweiz          2,63           |      Australien och Nya Zeeland   1,62           |      Kommunikation        8,20           |      Medelstora svenska bolag   49,35    
-Kanada           2,30           |      Afrika och Mellanöstern      0,54           |      Konsument, stabil    7,61           |      Små svenska bolag          11,51    
-Frankrike        2,24           |      Latinamerika                 0,47           |      Fastigheter          3,73           |                                          
-Tyskland         2,07           |      Östeuropa                    0,19           |      Råvaror              3,71           |                                          
-Australien       1,53           |                                                  |      Energi               2,86           |       
+Innehav                                     Andel (%)      |      Bransch              Andel (%)      |      Land             Andel (%)      |      Region                       Andel (%)
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Investor B                                  3,44           |      Finans               23,77          |      USA              47,02          |      Nordamerika                  49,34    
+Industrivärden C                            2,88           |      Teknik               17,16          |      Sverige          18,15          |      Sverige                      18,15    
+Apple Inc                                   2,78           |      Industri             11,39          |      Japan            5,66           |      Västeuropa exkl Sverige      13,82    
+Microsoft Corp                              1,96           |      Sjukvård             10,73          |      Kina             4,25           |      Asien exkl Japan             10,23    
+Amazon.com Inc                              1,70           |      Konsument, cyklisk   10,70          |      Storbritannien   3,43           |      Japan                        5,66     
+Kinnevik B                                  1,40           |      Kommunikation        7,85           |      Schweiz          2,49           |      Australien och Nya Zeeland   1,67     
+Lundbergföretagen B                         1,08           |      Konsument, stabil    6,75           |      Frankrike        2,41           |      Afrika och Mellanöstern      0,50     
+Facebook Inc                                0,81           |      Råvaror              4,13           |      Kanada           2,29           |      Latinamerika                 0,48     
+Taiwan Semiconductor Manufacturing Co Ltd   0,68           |      Fastigheter          3,39           |      Tyskland         2,14           |      Östeuropa                    0,14     
+Alphabet Inc Class A                        0,65           |      Allmännyttigt        2,08           |      Australien       1,60           |                                                
 ```
