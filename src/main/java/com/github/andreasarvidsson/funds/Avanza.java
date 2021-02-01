@@ -39,15 +39,16 @@ public abstract class Avanza {
     private static AvanzaFund getFundByName(final String name) throws IOException {
         if (!FUNDS.containsKey(name)) {
             final String fileName = String.format("avanza_%s", name);
-            AvanzaFund fund = FileCache.load(fileName, AvanzaFund.class
-            );
+            AvanzaFund fund = FileCache.load(fileName, AvanzaFund.class);
             if (fund == null) {
                 final String id = getId(name);
-                fund = HTTP.get(String.format("%s/_api/fund-guide/guide/%s", BASE, id),
+                fund = HTTP.get(
+                        String.format("%s/_api/fund-guide/guide/%s", BASE, id),
                         AvanzaFund.class
                 );
                 FileCache.store(fileName, fund);
             }
+            fund.compile();
             FUNDS.put(name, fund);
         }
         return FUNDS.get(name);

@@ -1,5 +1,6 @@
 package com.github.andreasarvidsson.funds;
 
+import com.github.andreasarvidsson.funds.Country.Region;
 import com.github.andreasarvidsson.funds.util.Sum;
 import com.github.andreasarvidsson.funds.util.Values;
 import java.io.IOException;
@@ -82,12 +83,12 @@ public class Portfolio {
 //                companiesSize.add("Små svenska bolag", fd.morningstar.smallCompanies * fd.percentageNormalized * swePercentage);
 //            }
         }
-        if (!companiesSize.isEmpty() && regions.has(Regions.SWEDEN)) {
-            final double sweSum = regions.get(Regions.SWEDEN) * 0.01;
-            companiesSize.normalize("Stora svenska bolag", sweSum);
-            companiesSize.normalize("Medelstora svenska bolag", sweSum);
-            companiesSize.normalize("Små svenska bolag", sweSum);
-        }
+//        if (!companiesSize.isEmpty() && regions.has(Region.SWEDEN.name)) {
+//            final double sweSum = regions.get(Region.SWEDEN.name) * 0.01;
+//            companiesSize.normalize("Stora svenska bolag", sweSum);
+//            companiesSize.normalize("Medelstora svenska bolag", sweSum);
+//            companiesSize.normalize("Små svenska bolag", sweSum);
+//        }
         countries.compile(true);
         regions.compile(true);
         sectors.compile(true);

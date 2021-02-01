@@ -47,8 +47,28 @@ public class Values implements Iterable<Pair<String, Double>> {
         return map.containsKey(key);
     }
 
+    public boolean has(final String... keys) {
+        for (final String key : keys) {
+            if (has(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public double get(final String key) {
-        return map.get(key);
+        if (map.containsKey(key)) {
+            return map.get(key);
+        }
+        return 0;
+    }
+
+    public double get(final String... keys) {
+        double res = 0;
+        for (final String key : keys) {
+            res += get(key);
+        }
+        return res;
     }
 
     public Pair<String, Double> get(final int index) {

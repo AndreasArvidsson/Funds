@@ -1,5 +1,6 @@
 package com.github.andreasarvidsson.funds;
 
+import com.github.andreasarvidsson.funds.Country.Region;
 import com.github.andreasarvidsson.funds.util.AsciiTable;
 import com.github.andreasarvidsson.funds.util.Comparison;
 import com.github.andreasarvidsson.funds.util.Excel;
@@ -243,9 +244,9 @@ public class Result {
                     fund.standardDeviation != null ? format(fund.standardDeviation) : MISSING,
                     fund.sharpeRatio != null ? format(fund.sharpeRatio) : MISSING,
                     String.join(", ", fund.categories),
-                    fd.avanza.hasCountry(Regions.SWEDEN) ? format(fd.avanza.getCountry(Regions.SWEDEN)) : MISSING,
-                    fd.avanza.hasCountry(Regions.USA) ? format(fd.avanza.getCountry(Regions.USA)) : MISSING,
-                    fd.avanza.hasRegion(Regions.ASIA) ? format(fd.avanza.getRegion(Regions.ASIA)) : MISSING
+                    fd.avanza.hasCountry(Country.SWEDEN) ? format(fd.avanza.getCountry(Country.SWEDEN)) : MISSING,
+                    fd.avanza.hasCountry(Country.USA) ? format(fd.avanza.getCountry(Country.USA)) : MISSING,
+                    fd.avanza.hasRegion(Region.ASIA) ? format(fd.avanza.getRegion(Region.ASIA)) : MISSING
             ));
             if (!p.companiesSize.isEmpty()) {
                 //TODO missing size info for now
@@ -275,6 +276,7 @@ public class Result {
 
     private List<String> getSumRow(final Portfolio p) {
         final List<String> res = new ArrayList();
+
         res.addAll(Arrays.asList(
                 "",
                 format(p.percentageSum),
@@ -283,9 +285,9 @@ public class Result {
                 p.sum.has(Headers.STANDARD_DEVIATION) ? format(p.sum.get(Headers.STANDARD_DEVIATION)) : MISSING,
                 p.sum.has(Headers.SHARPE_RATIO) ? format(p.sum.get(Headers.SHARPE_RATIO)) : MISSING,
                 "",
-                p.countries.has(Regions.SWEDEN) ? format(p.countries.get(Regions.SWEDEN)) : MISSING,
-                p.countries.has(Regions.USA) ? format(p.countries.get(Regions.USA)) : MISSING,
-                p.regions.has(Regions.ASIA) ? format(p.regions.get(Regions.ASIA)) : MISSING
+                p.countries.has(Country.SWEDEN.name) ? format(p.countries.get(Country.SWEDEN.name)) : MISSING,
+                p.countries.has(Country.USA.name) ? format(p.countries.get(Country.USA.name)) : MISSING,
+                p.regions.has(Region.ASIA.name) ? format(p.regions.get(Region.ASIA.name)) : MISSING
         ));
         if (!p.companiesSize.isEmpty()) {
             res.addAll(Arrays.asList(

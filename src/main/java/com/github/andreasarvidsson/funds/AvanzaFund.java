@@ -2,6 +2,8 @@ package com.github.andreasarvidsson.funds;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.github.andreasarvidsson.funds.Country.Market;
+import com.github.andreasarvidsson.funds.Country.Region;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,45 +26,54 @@ public class AvanzaFund {
     public List<String> categories;
     public List<ChartData> countryChartData, holdingChartData,
             sectorChartData, regionChartData;
-    public final Map<String, ChartData> countryMap = new HashMap();
-    public final Map<String, ChartData> regionsMap = new HashMap();
+    public final Map<Country, ChartData> countryMap = new HashMap();
+    public final Map<Region, ChartData> regionsMap = new HashMap();
+    public final Map<Market, ChartData> marketMap = new HashMap();
     private Map<String, Double> developmentMap;
 
-    public void setCountryChartData(final List<ChartData> countryChartData) {
-        this.countryChartData = countryChartData;
+    public void compile() {
         countryChartData.forEach(chartData -> {
-            final String regionName = Regions.get(chartData.name);
-            if (!regionsMap.containsKey(regionName)) {
+            final Country country = Country.fromString(chartData.name);
+            countryMap.put(country, chartData);
+
+            if (!regionsMap.containsKey(country.region)) {
                 final ChartData cd = new ChartData();
-                cd.name = regionName;
+                cd.name = country.region.toString();
                 cd.y = 0.0;
-                regionsMap.put(regionName, cd);
+                regionsMap.put(country.region, cd);
             }
-            countryMap.put(chartData.name, chartData);
-            regionsMap.get(regionName).y += chartData.y;
+            regionsMap.get(country.region).y += chartData.y;
+
+            if (!marketMap.containsKey(country.market)) {
+                final ChartData cd = new ChartData();
+                cd.name = country.market.toString();
+                cd.y = 0.0;
+                marketMap.put(country.market, cd);
+            }
+            marketMap.get(country.market).y += chartData.y;
         });
         regionChartData = new ArrayList(regionsMap.values());
         Collections.sort(regionChartData, (a, b) -> Double.compare(b.y, a.y));
     }
 
-    public boolean hasCountry(final String countryName) {
-        return countryMap.containsKey(countryName);
+    public boolean hasCountry(final Country country) {
+        return countryMap.containsKey(country);
     }
 
-    public double getCountry(final String countryName) {
-        if (countryMap.containsKey(countryName)) {
-            return countryMap.get(countryName).y;
+    public double getCountry(final Country country) {
+        if (countryMap.containsKey(country)) {
+            return countryMap.get(country).y;
         }
         return 0.0;
     }
 
-    public boolean hasRegion(final String regionName) {
-        return regionsMap.containsKey(regionName);
+    public boolean hasRegion(final Region region) {
+        return regionsMap.containsKey(region);
     }
 
-    public double getRegion(final String regionName) {
-        if (regionsMap.containsKey(regionName)) {
-            return regionsMap.get(regionName).y;
+    public double getRegion(final Region region) {
+        if (regionsMap.containsKey(region)) {
+            return regionsMap.get(region).y;
         }
         return 0.0;
     }
