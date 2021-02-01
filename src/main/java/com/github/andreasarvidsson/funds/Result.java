@@ -216,18 +216,14 @@ public class Result {
         final List<String> res = new ArrayList();
         res.addAll(Arrays.asList("Namn", "Andel (%)", "Avgift (%)", "Risk",
                 Headers.STANDARD_DEVIATION, Headers.SHARPE_RATIO,
-                "Kategorier", "Sverige (%)", "USA (%)", "Asien (%)"
+                "Kategorier", "Sverige (%)", "USA (%)", "Asien (%)", Headers.NON_DEVELOPED_MARKETS
         ));
         if (!p.companiesSize.isEmpty()) {
             res.addAll(Arrays.asList(
                     "Stora (%)", "Medelstora (%)", "Små (%)"
             ));
         }
-        Headers.DEVELOPMENT_TITLES.forEach(title -> {
-            if (p.developments.has(title)) {
-                res.add(title);
-            }
-        });
+        res.addAll(Headers.DEVELOPMENT_TITLES);
         return res;
     }
 
@@ -244,9 +240,10 @@ public class Result {
                     fund.standardDeviation != null ? format(fund.standardDeviation) : MISSING,
                     fund.sharpeRatio != null ? format(fund.sharpeRatio) : MISSING,
                     String.join(", ", fund.categories),
-                    fd.avanza.hasCountry(Country.SWEDEN) ? format(fd.avanza.getCountry(Country.SWEDEN)) : MISSING,
-                    fd.avanza.hasCountry(Country.USA) ? format(fd.avanza.getCountry(Country.USA)) : MISSING,
-                    fd.avanza.hasRegion(Region.ASIA) ? format(fd.avanza.getRegion(Region.ASIA)) : MISSING
+                    format(fd.avanza.getCountry(Country.SWEDEN)),
+                    format(fd.avanza.getCountry(Country.USA)),
+                    format(fd.avanza.getRegion(Region.ASIA)),
+                    format(fd.avanza.getNonDevelopedMarkets())
             ));
             if (!p.companiesSize.isEmpty()) {
                 //TODO missing size info for now
@@ -258,16 +255,11 @@ public class Result {
 //                    ));
 //                }
 //                else {
-                row.addAll(Arrays.asList("", "", ""));
+//                row.addAll(Arrays.asList("", "", ""));
 //                }
             }
             Headers.DEVELOPMENT_TITLES.forEach(key -> {
-                if (fund.hasDevelopment(key)) {
-                    row.add(format(fund.getDevelopment(key)));
-                }
-                else {
-                    row.add(MISSING);
-                }
+                row.add(format(fund.getDevelopment(key)));
             });
             res.add(row);
         });
@@ -282,12 +274,13 @@ public class Result {
                 format(p.percentageSum),
                 format(p.avgFee),
                 format(p.risk),
-                p.sum.has(Headers.STANDARD_DEVIATION) ? format(p.sum.get(Headers.STANDARD_DEVIATION)) : MISSING,
-                p.sum.has(Headers.SHARPE_RATIO) ? format(p.sum.get(Headers.SHARPE_RATIO)) : MISSING,
+                format(p.sum.get(Headers.STANDARD_DEVIATION)),
+                format(p.sum.get(Headers.SHARPE_RATIO)),
                 "",
-                p.countries.has(Country.SWEDEN.name) ? format(p.countries.get(Country.SWEDEN.name)) : MISSING,
-                p.countries.has(Country.USA.name) ? format(p.countries.get(Country.USA.name)) : MISSING,
-                p.regions.has(Region.ASIA.name) ? format(p.regions.get(Region.ASIA.name)) : MISSING
+                format(p.countries.get(Country.SWEDEN.name)),
+                format(p.countries.get(Country.USA.name)),
+                format(p.regions.get(Region.ASIA.name)),
+                format(p.sum.get(Headers.NON_DEVELOPED_MARKETS))
         ));
         if (!p.companiesSize.isEmpty()) {
             res.addAll(Arrays.asList(
@@ -411,6 +404,7 @@ public class Result {
         );
         addRow(res, true, 4, Headers.STANDARD_DEVIATION, p1.sum.get(Headers.STANDARD_DEVIATION), p2.sum.get(Headers.STANDARD_DEVIATION));
         addRow(res, true, 5, Headers.SHARPE_RATIO, p1.sum.get(Headers.SHARPE_RATIO), p2.sum.get(Headers.SHARPE_RATIO));
+        addRow(res, true, 6, Headers.NON_DEVELOPED_MARKETS, p1.sum.get(Headers.NON_DEVELOPED_MARKETS), p2.sum.get(Headers.NON_DEVELOPED_MARKETS));
         compareDevelopments(res, false, p1, p2);
         return res;
     }
@@ -444,12 +438,10 @@ public class Result {
             final Portfolio p2) {
         for (int i = 0; i < Headers.DEVELOPMENT_TITLES.size(); ++i) {
             final String title = Headers.DEVELOPMENT_TITLES.get(i);
-            if (p1.developments.has(title) && p2.developments.has(title)) {
-                addRow(rows, first, i, title,
-                        p1.developments.get(title),
-                        p2.developments.get(title)
-                );
-            }
+            addRow(rows, first, i, title,
+                    p1.developments.get(title),
+                    p2.developments.get(title)
+            );
         }
     }
 
@@ -489,8 +481,8 @@ public class Result {
         }
         rows.get(i).addAll(Arrays.asList(
                 title,
-                val1 != null ? format(val1) : MISSING,
-                val2 != null ? format(val2) : MISSING,
+                format(val1),
+                format(val2),
                 val1 != null && val2 != null ? format(val2 - val1) : MISSING
         ));
         if (first) {
@@ -498,7 +490,10 @@ public class Result {
         }
     }
 
-    private String format(final double value) {
+    private String format(final Double value) {
+        if (value == null) {
+            return MISSING;
+        }
         return String.format("%.2f", Math.round(value * 100.0) / 100.0);
     }
 

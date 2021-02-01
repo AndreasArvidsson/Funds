@@ -56,26 +56,18 @@ public class AvanzaFund {
         Collections.sort(regionChartData, (a, b) -> Double.compare(b.y, a.y));
     }
 
-    public boolean hasCountry(final Country country) {
-        return countryMap.containsKey(country);
-    }
-
-    public double getCountry(final Country country) {
+    public Double getCountry(final Country country) {
         if (countryMap.containsKey(country)) {
             return countryMap.get(country).y;
         }
-        return 0.0;
+        return null;
     }
 
-    public boolean hasRegion(final Region region) {
-        return regionsMap.containsKey(region);
-    }
-
-    public double getRegion(final Region region) {
+    public Double getRegion(final Region region) {
         if (regionsMap.containsKey(region)) {
             return regionsMap.get(region).y;
         }
-        return 0.0;
+        return null;
     }
 
     public boolean hasDevelopment(final String key) {
@@ -85,11 +77,36 @@ public class AvanzaFund {
         return developmentMap.containsKey(key);
     }
 
-    public double getDevelopment(final String key) {
+    public Double getDevelopment(final String key) {
         if (developmentMap == null) {
             developmentMap = compileDevelopmentMap();
         }
-        return developmentMap.get(key);
+        if (developmentMap.containsKey(key)) {
+            return developmentMap.get(key);
+        }
+        return null;
+    }
+
+    public boolean hasNonDevelopedMarkets() {
+        for (final Market m : marketMap.keySet()) {
+            if (m != Market.DEVELOPED) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Double getNonDevelopedMarkets() {
+        if (!hasNonDevelopedMarkets()) {
+            return null;
+        }
+        double res = 0;
+        for (final Map.Entry<Market, ChartData> e : marketMap.entrySet()) {
+            if (e.getKey() != Market.DEVELOPED) {
+                res += e.getValue().y;
+            }
+        }
+        return res;
     }
 
     private Map<String, Double> compileDevelopmentMap() {

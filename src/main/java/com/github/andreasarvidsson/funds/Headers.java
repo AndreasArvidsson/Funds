@@ -11,6 +11,7 @@ public abstract class Headers {
 
     public final static String SHARPE_RATIO = "Sharpekvot";
     public final static String STANDARD_DEVIATION = "Stdav (%)";
+    public final static String NON_DEVELOPED_MARKETS = "EM/FM (%)";
     public static final String T_1_D = "1 d";
     public static final String T_1_M = "1 m";
     public static final String T_3_M = "3 m";

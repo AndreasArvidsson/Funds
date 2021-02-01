@@ -1,6 +1,5 @@
 package com.github.andreasarvidsson.funds;
 
-import com.github.andreasarvidsson.funds.Country.Region;
 import com.github.andreasarvidsson.funds.util.Sum;
 import com.github.andreasarvidsson.funds.util.Values;
 import java.io.IOException;
@@ -55,6 +54,9 @@ public class Portfolio {
             }
             if (fd.avanza.standardDeviation != null) {
                 sum.add(Headers.STANDARD_DEVIATION, fd.avanza.standardDeviation, fd.percentageNormalized);
+            }
+            if (fd.avanza.hasNonDevelopedMarkets()) {
+                sum.add(Headers.NON_DEVELOPED_MARKETS, fd.avanza.getNonDevelopedMarkets(), fd.percentageNormalized);
             }
             Headers.DEVELOPMENT_TITLES.forEach(key -> {
                 if (fd.avanza.hasDevelopment(key)) {
