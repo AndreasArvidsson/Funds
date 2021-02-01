@@ -56,18 +56,18 @@ public class AvanzaFund {
         Collections.sort(regionChartData, (a, b) -> Double.compare(b.y, a.y));
     }
 
-    public Double getCountry(final Country country) {
+    public Double getCountry(final Country country, final Double def) {
         if (countryMap.containsKey(country)) {
             return countryMap.get(country).y;
         }
-        return null;
+        return def;
     }
 
-    public Double getRegion(final Region region) {
+    public Double getRegion(final Region region, final Double def) {
         if (regionsMap.containsKey(region)) {
             return regionsMap.get(region).y;
         }
-        return null;
+        return def;
     }
 
     public boolean hasDevelopment(final String key) {
@@ -77,14 +77,14 @@ public class AvanzaFund {
         return developmentMap.containsKey(key);
     }
 
-    public Double getDevelopment(final String key) {
+    public Double getDevelopment(final String key, final Double def) {
         if (developmentMap == null) {
             developmentMap = compileDevelopmentMap();
         }
         if (developmentMap.containsKey(key)) {
             return developmentMap.get(key);
         }
-        return null;
+        return def;
     }
 
     public boolean hasNonDevelopedMarkets() {
@@ -98,7 +98,7 @@ public class AvanzaFund {
 
     public Double getNonDevelopedMarkets() {
         if (!hasNonDevelopedMarkets()) {
-            return null;
+            return 0.0;
         }
         double res = 0;
         for (final Map.Entry<Market, ChartData> e : marketMap.entrySet()) {

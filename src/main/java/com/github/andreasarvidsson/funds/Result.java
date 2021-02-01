@@ -240,9 +240,9 @@ public class Result {
                     fund.standardDeviation != null ? format(fund.standardDeviation) : MISSING,
                     fund.sharpeRatio != null ? format(fund.sharpeRatio) : MISSING,
                     String.join(", ", fund.categories),
-                    format(fd.avanza.getCountry(Country.SWEDEN)),
-                    format(fd.avanza.getCountry(Country.USA)),
-                    format(fd.avanza.getRegion(Region.ASIA)),
+                    format(fd.avanza.getCountry(Country.SWEDEN, 0.0)),
+                    format(fd.avanza.getCountry(Country.USA, 0.0)),
+                    format(fd.avanza.getRegion(Region.ASIA, 0.0)),
                     format(fd.avanza.getNonDevelopedMarkets())
             ));
             if (!p.companiesSize.isEmpty()) {
@@ -259,7 +259,7 @@ public class Result {
 //                }
             }
             Headers.DEVELOPMENT_TITLES.forEach(key -> {
-                row.add(format(fund.getDevelopment(key)));
+                row.add(format(fund.getDevelopment(key, null)));
             });
             res.add(row);
         });
@@ -268,19 +268,18 @@ public class Result {
 
     private List<String> getSumRow(final Portfolio p) {
         final List<String> res = new ArrayList();
-
         res.addAll(Arrays.asList(
                 "",
                 format(p.percentageSum),
                 format(p.avgFee),
                 format(p.risk),
-                format(p.sum.get(Headers.STANDARD_DEVIATION)),
-                format(p.sum.get(Headers.SHARPE_RATIO)),
+                format(p.sumNorm.get(Headers.STANDARD_DEVIATION, null)),
+                format(p.sumNorm.get(Headers.SHARPE_RATIO, null)),
                 "",
-                format(p.countries.get(Country.SWEDEN.name)),
-                format(p.countries.get(Country.USA.name)),
-                format(p.regions.get(Region.ASIA.name)),
-                format(p.sum.get(Headers.NON_DEVELOPED_MARKETS))
+                format(p.countries.get(Country.SWEDEN.name, 0.0)),
+                format(p.countries.get(Country.USA.name, 0.0)),
+                format(p.regions.get(Region.ASIA.name, 0.0)),
+                format(p.sum.get(Headers.NON_DEVELOPED_MARKETS, 0.0))
         ));
         if (!p.companiesSize.isEmpty()) {
             res.addAll(Arrays.asList(
@@ -291,7 +290,7 @@ public class Result {
         }
         Headers.DEVELOPMENT_TITLES.forEach(title -> {
             if (p.developments.has(title)) {
-                res.add(format(p.developments.get(title)));
+                res.add(format(p.developments.get(title, null)));
             }
         });
         return res;
@@ -402,9 +401,9 @@ public class Result {
         addRow(
                 res, true, 3, "Risk", p1.risk, p2.risk
         );
-        addRow(res, true, 4, Headers.STANDARD_DEVIATION, p1.sum.get(Headers.STANDARD_DEVIATION), p2.sum.get(Headers.STANDARD_DEVIATION));
-        addRow(res, true, 5, Headers.SHARPE_RATIO, p1.sum.get(Headers.SHARPE_RATIO), p2.sum.get(Headers.SHARPE_RATIO));
-        addRow(res, true, 6, Headers.NON_DEVELOPED_MARKETS, p1.sum.get(Headers.NON_DEVELOPED_MARKETS), p2.sum.get(Headers.NON_DEVELOPED_MARKETS));
+        addRow(res, true, 4, Headers.STANDARD_DEVIATION, p1.sumNorm.get(Headers.STANDARD_DEVIATION, null), p2.sumNorm.get(Headers.STANDARD_DEVIATION, null));
+        addRow(res, true, 5, Headers.SHARPE_RATIO, p1.sumNorm.get(Headers.SHARPE_RATIO, null), p2.sumNorm.get(Headers.SHARPE_RATIO, null));
+        addRow(res, true, 6, Headers.NON_DEVELOPED_MARKETS, p1.sum.get(Headers.NON_DEVELOPED_MARKETS, 0.0), p2.sum.get(Headers.NON_DEVELOPED_MARKETS, 0.0));
         compareDevelopments(res, false, p1, p2);
         return res;
     }
@@ -439,8 +438,8 @@ public class Result {
         for (int i = 0; i < Headers.DEVELOPMENT_TITLES.size(); ++i) {
             final String title = Headers.DEVELOPMENT_TITLES.get(i);
             addRow(rows, first, i, title,
-                    p1.developments.get(title),
-                    p2.developments.get(title)
+                    p1.developments.get(title, null),
+                    p2.developments.get(title, null)
             );
         }
     }

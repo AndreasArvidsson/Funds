@@ -47,11 +47,11 @@ public class Values implements Iterable<Pair<String, Double>> {
         return map.containsKey(key);
     }
 
-    public Double get(final String key) {
+    public Double get(final String key, final Double def) {
         if (map.containsKey(key)) {
             return map.get(key);
         }
-        return null;
+        return def;
     }
 
     public Pair<String, Double> get(final int index) {

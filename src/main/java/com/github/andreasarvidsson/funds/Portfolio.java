@@ -19,6 +19,7 @@ public class Portfolio {
     public final Values sectors = new Values();
     public final Values regions = new Values();
     public final Values holdings = new Values();
+    public final Sum sumNorm = new Sum();
     public final Sum sum = new Sum();
     public final Sum developments = new Sum();
     public final String name;
@@ -50,17 +51,17 @@ public class Portfolio {
             avgFee += fd.getFee() * fd.percentageNormalized;
             risk += fd.avanza.risk * fd.percentageNormalized;
             if (fd.avanza.sharpeRatio != null) {
-                sum.add(Headers.SHARPE_RATIO, fd.avanza.sharpeRatio, fd.percentageNormalized);
+                sumNorm.add(Headers.SHARPE_RATIO, fd.avanza.sharpeRatio, fd.percentageNormalized);
             }
             if (fd.avanza.standardDeviation != null) {
-                sum.add(Headers.STANDARD_DEVIATION, fd.avanza.standardDeviation, fd.percentageNormalized);
+                sumNorm.add(Headers.STANDARD_DEVIATION, fd.avanza.standardDeviation, fd.percentageNormalized);
             }
             if (fd.avanza.hasNonDevelopedMarkets()) {
                 sum.add(Headers.NON_DEVELOPED_MARKETS, fd.avanza.getNonDevelopedMarkets(), fd.percentageNormalized);
             }
             Headers.DEVELOPMENT_TITLES.forEach(key -> {
                 if (fd.avanza.hasDevelopment(key)) {
-                    developments.add(key, fd.avanza.getDevelopment(key), fd.percentageNormalized);
+                    developments.add(key, fd.avanza.getDevelopment(key, 0.0), fd.percentageNormalized);
                 }
             });
             fd.avanza.countryChartData.forEach(data -> {
@@ -96,6 +97,8 @@ public class Portfolio {
         sectors.compile(true);
         holdings.compile(true);
         companiesSize.compile();
+        sumNorm.normalize();
+        developments.normalize();
     }
 
 }
