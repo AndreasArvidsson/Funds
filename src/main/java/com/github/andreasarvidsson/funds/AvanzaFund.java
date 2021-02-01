@@ -87,19 +87,7 @@ public class AvanzaFund {
         return def;
     }
 
-    public boolean hasNonDevelopedMarkets() {
-        for (final Market m : marketMap.keySet()) {
-            if (m != Market.DEVELOPED) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public Double getNonDevelopedMarkets() {
-        if (!hasNonDevelopedMarkets()) {
-            return 0.0;
-        }
         double res = 0;
         for (final Map.Entry<Market, ChartData> e : marketMap.entrySet()) {
             if (e.getKey() != Market.DEVELOPED) {

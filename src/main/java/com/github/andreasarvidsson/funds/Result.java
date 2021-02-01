@@ -78,7 +78,7 @@ public class Result {
         asciiTable.addRow();
         excelTable.addRow();
 
-        final List<String> headersRow2 = getCompareHeadersRow(p1, p2, "Innehav", "Bransch");
+        final List<String> headersRow2 = getCompareHeadersRow(p1, p2, Headers.HOLDINGS, Headers.SECTOR);
         asciiTable.addRow(headersRow2);
         asciiTable.addHR();
         excelTable.addRow(headersRow2);
@@ -92,7 +92,7 @@ public class Result {
         asciiTable.addRow();
         excelTable.addRow();
 
-        final List<String> headersRow3 = getCompareHeadersRow(p1, p2, "Land", "Region");
+        final List<String> headersRow3 = getCompareHeadersRow(p1, p2, Headers.LAND, Headers.REGION);
         asciiTable.addRow(headersRow3);
         asciiTable.addHR();
         excelTable.addRow(headersRow3);
@@ -112,7 +112,7 @@ public class Result {
 //                    "Storlek",
 //                    String.format("%s (%%)", p1.name),
 //                    String.format("%s (%%)", p2.name),
-//                    "Skillnad (%)"
+//                    Headers.DIFFERENCE
 //            ));
 //        }
 //        else {
@@ -214,7 +214,7 @@ public class Result {
 
     private List<String> getFundsHeadersRow(final Portfolio p) {
         final List<String> res = new ArrayList();
-        res.addAll(Arrays.asList("Namn", "Andel (%)", "Avgift (%)", "Risk",
+        res.addAll(Arrays.asList("Namn", Headers.PERCENTAGE, Headers.FEE, Headers.RISK,
                 Headers.STANDARD_DEVIATION, Headers.SHARPE_RATIO,
                 "Kategorier", "Sverige (%)", "USA (%)", "Asien (%)", Headers.NON_DEVELOPED_MARKETS
         ));
@@ -273,13 +273,13 @@ public class Result {
                 format(p.percentageSum),
                 format(p.avgFee),
                 format(p.risk),
-                format(p.sumNorm.get(Headers.STANDARD_DEVIATION, null)),
-                format(p.sumNorm.get(Headers.SHARPE_RATIO, null)),
+                format(p.sum.get(Headers.STANDARD_DEVIATION, null)),
+                format(p.sum.get(Headers.SHARPE_RATIO, null)),
                 "",
                 format(p.countries.get(Country.SWEDEN.name, 0.0)),
                 format(p.countries.get(Country.USA.name, 0.0)),
                 format(p.regions.get(Region.ASIA.name, 0.0)),
-                format(p.sum.get(Headers.NON_DEVELOPED_MARKETS, 0.0))
+                format(p.nonDevelopedMarkets)
         ));
         if (!p.companiesSize.isEmpty()) {
             res.addAll(Arrays.asList(
@@ -299,14 +299,14 @@ public class Result {
     private List<String> getStatsHeaderRow(final Portfolio p) {
         final List<String> res = new ArrayList();
         res.addAll(Arrays.asList(
-                "Innehav", "Andel (%)", SPACE,
-                "Bransch", "Andel (%)", SPACE,
-                "Land", "Andel (%)", SPACE,
-                "Region", "Andel (%)"
+                Headers.HOLDINGS, Headers.PERCENTAGE, SPACE,
+                Headers.SECTOR, Headers.PERCENTAGE, SPACE,
+                Headers.LAND, Headers.PERCENTAGE, SPACE,
+                Headers.REGION, Headers.PERCENTAGE
         ));
         if (!p.companiesSize.isEmpty()) {
             res.addAll(Arrays.asList(
-                    SPACE, "Storlek", "Andel (%)"
+                    SPACE, "Storlek", Headers.PERCENTAGE
             ));
         }
         return res;
@@ -362,7 +362,7 @@ public class Result {
                 "Utveckling",
                 String.format("%s (%%)", p1.name),
                 String.format("%s (%%)", p2.name),
-                "Skillnad (%)"
+                Headers.DIFFERENCE
         ));
         return res;
     }
@@ -374,12 +374,12 @@ public class Result {
                 title1,
                 String.format("%s (%%)", p1.name),
                 String.format("%s (%%)", p2.name),
-                "Skillnad (%)",
+                Headers.DIFFERENCE,
                 SPACE,
                 title2,
                 String.format("%s (%%)", p1.name),
                 String.format("%s (%%)", p2.name),
-                "Skillnad (%)"
+                Headers.DIFFERENCE
         );
     }
 
@@ -393,17 +393,17 @@ public class Result {
                 SPACE
         )));
         addRow(
-                res, true, 1, "Andel (%)", p1.percentageSum, p2.percentageSum
+                res, true, 1, Headers.PERCENTAGE, p1.percentageSum, p2.percentageSum
         );
         addRow(
-                res, true, 2, "Avgift (%)", p1.avgFee, p2.avgFee
+                res, true, 2, Headers.FEE, p1.avgFee, p2.avgFee
         );
         addRow(
-                res, true, 3, "Risk", p1.risk, p2.risk
+                res, true, 3, Headers.RISK, p1.risk, p2.risk
         );
-        addRow(res, true, 4, Headers.STANDARD_DEVIATION, p1.sumNorm.get(Headers.STANDARD_DEVIATION, null), p2.sumNorm.get(Headers.STANDARD_DEVIATION, null));
-        addRow(res, true, 5, Headers.SHARPE_RATIO, p1.sumNorm.get(Headers.SHARPE_RATIO, null), p2.sumNorm.get(Headers.SHARPE_RATIO, null));
-        addRow(res, true, 6, Headers.NON_DEVELOPED_MARKETS, p1.sum.get(Headers.NON_DEVELOPED_MARKETS, 0.0), p2.sum.get(Headers.NON_DEVELOPED_MARKETS, 0.0));
+        addRow(res, true, 4, Headers.STANDARD_DEVIATION, p1.sum.get(Headers.STANDARD_DEVIATION, null), p2.sum.get(Headers.STANDARD_DEVIATION, null));
+        addRow(res, true, 5, Headers.SHARPE_RATIO, p1.sum.get(Headers.SHARPE_RATIO, null), p2.sum.get(Headers.SHARPE_RATIO, null));
+        addRow(res, true, 6, Headers.NON_DEVELOPED_MARKETS, p1.nonDevelopedMarkets, p2.nonDevelopedMarkets);
         compareDevelopments(res, false, p1, p2);
         return res;
     }

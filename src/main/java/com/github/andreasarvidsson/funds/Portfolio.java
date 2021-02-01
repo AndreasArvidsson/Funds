@@ -19,11 +19,10 @@ public class Portfolio {
     public final Values sectors = new Values();
     public final Values regions = new Values();
     public final Values holdings = new Values();
-    public final Sum sumNorm = new Sum();
     public final Sum sum = new Sum();
     public final Sum developments = new Sum();
     public final String name;
-    public double percentageSum, avgFee, risk;
+    public double percentageSum, avgFee, risk, nonDevelopedMarkets;
 
     public Portfolio(
             final String name,
@@ -50,14 +49,12 @@ public class Portfolio {
         for (final FundData fd : funds) {
             avgFee += fd.getFee() * fd.percentageNormalized;
             risk += fd.avanza.risk * fd.percentageNormalized;
+            nonDevelopedMarkets += fd.avanza.getNonDevelopedMarkets() * fd.percentageNormalized;
             if (fd.avanza.sharpeRatio != null) {
-                sumNorm.add(Headers.SHARPE_RATIO, fd.avanza.sharpeRatio, fd.percentageNormalized);
+                sum.add(Headers.SHARPE_RATIO, fd.avanza.sharpeRatio, fd.percentageNormalized);
             }
             if (fd.avanza.standardDeviation != null) {
-                sumNorm.add(Headers.STANDARD_DEVIATION, fd.avanza.standardDeviation, fd.percentageNormalized);
-            }
-            if (fd.avanza.hasNonDevelopedMarkets()) {
-                sum.add(Headers.NON_DEVELOPED_MARKETS, fd.avanza.getNonDevelopedMarkets(), fd.percentageNormalized);
+                sum.add(Headers.STANDARD_DEVIATION, fd.avanza.standardDeviation, fd.percentageNormalized);
             }
             Headers.DEVELOPMENT_TITLES.forEach(key -> {
                 if (fd.avanza.hasDevelopment(key)) {
@@ -97,7 +94,7 @@ public class Portfolio {
         sectors.compile(true);
         holdings.compile(true);
         companiesSize.compile();
-        sumNorm.normalize();
+        sum.normalize();
         developments.normalize();
     }
 
