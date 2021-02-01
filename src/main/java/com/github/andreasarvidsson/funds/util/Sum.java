@@ -21,11 +21,12 @@ public class Sum {
         percentages.put(key, percentages.get(key) + percentage);
     }
 
-    public void normalize() {
-        sum.entrySet().forEach(e -> {
-            sum.put(e.getKey(), e.getValue() / percentages.get(e.getKey()));
-        });
-    }
+    //Disabled for now
+//    public void normalize() {
+//        sum.entrySet().forEach(e -> {
+//            sum.put(e.getKey(), e.getValue() / percentages.get(e.getKey()));
+//        });
+//    }
 
     public boolean has(final String key) {
         return sum.containsKey(key);

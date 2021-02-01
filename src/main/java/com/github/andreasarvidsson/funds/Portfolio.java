@@ -96,8 +96,6 @@ public class Portfolio {
         sectors.compile(true);
         holdings.compile(true);
         companiesSize.compile();
-        sum.normalize();
-        developments.normalize();
     }
 
 }
