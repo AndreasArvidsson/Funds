@@ -31,9 +31,10 @@ public enum Country {
 
     //Storbritannien
     GREAT_BRITAIN("Storbritannien", Region.GREAT_BRITAIN, Market.DEVELOPED),
+    BERMUDA("Bermuda", Region.GREAT_BRITAIN, Market.DEVELOPED), //Guestimate: Sovereignty UK. Part of Handelsbanken Gl Småbolag(Solactive ISS ESG Screened Developed Markets Small Cap).
     BRITISH_VIRGIN_ISLANDS("Brittiska Virgin Islands", Region.GREAT_BRITAIN, Market.EMERING), //Guestimate: Sovereignty UK. Part of Länsförsäkringar Tillväxtmrkd(MSCI EM)
     CAYMAN_ISLANDS("Caymanöarna", Region.GREAT_BRITAIN, Market.EMERING), //Guestimate: Sovereignty UK. Part of Avanza emerging markets(MSCI EM)
-    
+
     //Europa, DEVELOPED
     AUSTRIA("Österrike", Region.EUROPA, Market.DEVELOPED),
     BELGIUM("Belgien", Region.EUROPA, Market.DEVELOPED),
@@ -79,6 +80,7 @@ public enum Country {
     PHILIPPINES("Filippinerna", Region.ASIA, Market.EMERING),
     TAIWAN("Taiwan", Region.ASIA, Market.EMERING),
     THAILAND("Thailand", Region.ASIA, Market.EMERING),
+    KAZAKHSTAN("Kazakstan", Region.ASIA, Market.FRONTIER),
    
     //Japan
     JAPAN("Japan", Region.JAPAN, Market.DEVELOPED),
