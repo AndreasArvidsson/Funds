@@ -52,6 +52,7 @@ public enum Country {
     SWITZERLAND("Schweiz", Region.EUROPA, Market.DEVELOPED),
     LUXEMBOURG("Luxemburg", Region.EUROPA, Market.DEVELOPED), //See 40 above
     ICELAND("Island", Region.EUROPA, Market.DEVELOPED), //See 40 above
+    CYPRUS("Cypern", Region.EUROPA, Market.DEVELOPED), //See 40 above
 
     //Europa, EMERGING
     CZECH_REPUBLIC("Tjeckien", Region.EUROPA, Market.EMERING),
