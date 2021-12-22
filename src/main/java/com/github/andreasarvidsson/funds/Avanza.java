@@ -18,7 +18,7 @@ import java.util.NoSuchElementException;
 public abstract class Avanza {
 
     private static final String BASE = "https://www.avanza.se";
-    private static final Map<String, AvanzaFund> FUNDS = new HashMap();
+    private static final Map<String, AvanzaFund> FUNDS = new HashMap<>();
 
     public static AvanzaFund getFund(final String name, final String... alternativeNames) throws IOException {
         try {

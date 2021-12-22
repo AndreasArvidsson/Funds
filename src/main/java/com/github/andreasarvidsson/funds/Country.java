@@ -28,6 +28,7 @@ public enum Country {
     COLOMBIA("Colombia", Region.LATIN_AMERICA, Market.EMERING),
     MEXICO("Mexiko", Region.LATIN_AMERICA, Market.EMERING),
     PERU("Peru", Region.LATIN_AMERICA, Market.EMERING),
+    COSTA_RICA("Costa Rica", Region.LATIN_AMERICA, Market.EMERING),
 
     //Storbritannien
     GREAT_BRITAIN("Storbritannien", Region.GREAT_BRITAIN, Market.DEVELOPED),
@@ -109,7 +110,7 @@ public enum Country {
     public final String name;
     public final Region region;
     public final Market market;
-    private final static Map<String, Country> MAP = new HashMap();
+    private final static Map<String, Country> MAP = new HashMap<>();
     
     static {
         for (Country c : Country.values()) {

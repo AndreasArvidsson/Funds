@@ -11,8 +11,8 @@ import java.util.List;
 public class AsciiTable {
 
     private final static int CELL_SPACING = 3;
-    private final List<Row> rows = new ArrayList();
-    private final List<Integer> colWidths = new ArrayList();
+    private final List<Row> rows = new ArrayList<>();
+    private final List<Integer> colWidths = new ArrayList<>();
 
     public void reset() {
         rows.clear();
@@ -122,7 +122,7 @@ public class AsciiTable {
         public final boolean hr;
 
         public Row() {
-            this.cells = new ArrayList();
+            this.cells = new ArrayList<>();
             this.hr = false;
         }
 

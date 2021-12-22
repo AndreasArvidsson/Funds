@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class Portfolio {
 
-    public final List<FundData> funds = new ArrayList();
+    public final List<FundData> funds = new ArrayList<>();
     public final Values companiesSize = new Values();
     public final Values countries = new Values();
     public final Values sectors = new Values();

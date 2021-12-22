@@ -22,8 +22,8 @@ public class Rankings {
     );
 
     public final String name;
-    public final List<FundRank> funds = new ArrayList();
-    public final List<String> headers = new ArrayList();
+    public final List<FundRank> funds = new ArrayList<>();
+    public final List<String> headers = new ArrayList<>();
 
     public Rankings(final String name, final SelectedFund... selectedFunds) throws IOException {
         this(name, Arrays.asList(selectedFunds));
@@ -71,39 +71,39 @@ public class Rankings {
             final Pair<FundRank, Double> p = values.get(j);
             final FundRank fr = p.first();
             final int points = values.size() - j;
-            fr.values.add(new Pair(points, p.second()));
+            fr.values.add(new Pair<Integer, Double>(points, p.second()));
         }
     }
 
     private List<Pair<FundRank, Double>> getFees() {
-        final List<Pair<FundRank, Double>> res = new ArrayList();
+        final List<Pair<FundRank, Double>> res = new ArrayList<>();
         funds.forEach(fund -> {
-            res.add(new Pair(fund, fund.getFee()));
+            res.add(new Pair<>(fund, fund.getFee()));
         });
         Collections.sort(res, (a, b) -> Double.compare(b.second(), a.second()));
         return res;
     }
 
     private List<Pair<FundRank, Double>> getSharpeRatio() {
-        final List<Pair<FundRank, Double>> res = new ArrayList();
+        final List<Pair<FundRank, Double>> res = new ArrayList<>();
         for (final FundRank fund : funds) {
             if (fund.avanza.sharpeRatio == null) {
                 return null;
             }
-            res.add(new Pair(fund, fund.avanza.sharpeRatio));
+            res.add(new Pair<>(fund, fund.avanza.sharpeRatio));
         }
         Collections.sort(res, (a, b) -> Double.compare(a.second(), b.second()));
         return res;
     }
 
     private List<Pair<FundRank, Double>> getValues(final int level) {
-        final List<Pair<FundRank, Double>> res = new ArrayList();
+        final List<Pair<FundRank, Double>> res = new ArrayList<>();
         for (final FundRank fund : funds) {
             final Double value = getValue(fund.avanza, level);
             if (value == null) {
                 return null;
             }
-            res.add(new Pair(fund, value));
+            res.add(new Pair<>(fund, value));
         }
         Collections.sort(res, (a, b) -> Double.compare(a.second(), b.second()));
         return res;
@@ -128,7 +128,7 @@ public class Rankings {
 
         public final AvanzaFund avanza;
         public double mean;
-        public final List<Pair<Integer, Double>> values = new ArrayList();
+        public final List<Pair<Integer, Double>> values = new ArrayList<>();
         private final Double fee;
 
         public FundRank(final AvanzaFund avanza, final Double fee) {

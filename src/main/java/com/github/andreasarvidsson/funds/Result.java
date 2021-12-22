@@ -84,7 +84,7 @@ public class Result {
         excelTable.addRow(headersRow2);
         excelTable.addHR();
 
-        final List<List<String>> rows2 = new ArrayList();
+        final List<List<String>> rows2 = new ArrayList<>();
         compareValues(rows2, true, p1.holdings, p2.holdings);
         compareValues(rows2, false, p1.sectors, p2.sectors);
         asciiTable.addRows(rows2);
@@ -98,7 +98,7 @@ public class Result {
         excelTable.addRow(headersRow3);
         excelTable.addHR();
 
-        final List<List<String>> rows3 = new ArrayList();
+        final List<List<String>> rows3 = new ArrayList<>();
         compareValues(rows3, true, p1.countries, p2.countries);
         compareValues(rows3, false, p1.regions, p2.regions);
         asciiTable.addRows(rows3);
@@ -213,7 +213,7 @@ public class Result {
     }
 
     private List<String> getFundsHeadersRow(final Portfolio p) {
-        final List<String> res = new ArrayList();
+        final List<String> res = new ArrayList<>();
         res.addAll(Arrays.asList("Namn", Headers.PERCENTAGE, Headers.FEE, Headers.RISK,
                 Headers.STANDARD_DEVIATION, Headers.SHARPE_RATIO,
                 "Kategorier", "Sverige (%)", "USA (%)", "Asien (%)", Headers.NON_DEVELOPED_MARKETS
@@ -228,9 +228,9 @@ public class Result {
     }
 
     private List<List<String>> getFundRows(final Portfolio p) {
-        final List<List<String>> res = new ArrayList();
+        final List<List<String>> res = new ArrayList<>();
         p.funds.forEach(fd -> {
-            final List<String> row = new ArrayList();
+            final List<String> row = new ArrayList<>();
             final AvanzaFund fund = fd.avanza;
             row.addAll(Arrays.asList(
                     fund.name,
@@ -267,7 +267,7 @@ public class Result {
     }
 
     private List<String> getSumRow(final Portfolio p) {
-        final List<String> res = new ArrayList();
+        final List<String> res = new ArrayList<>();
         res.addAll(Arrays.asList(
                 "",
                 format(p.percentageSum),
@@ -297,7 +297,7 @@ public class Result {
     }
 
     private List<String> getStatsHeaderRow(final Portfolio p) {
-        final List<String> res = new ArrayList();
+        final List<String> res = new ArrayList<>();
         res.addAll(Arrays.asList(
                 Headers.HOLDINGS, Headers.PERCENTAGE, SPACE,
                 Headers.SECTOR, Headers.PERCENTAGE, SPACE,
@@ -313,7 +313,7 @@ public class Result {
     }
 
     private List<List<String>> getStatsRows(final Portfolio p) {
-        final List<List<String>> res = new ArrayList();
+        final List<List<String>> res = new ArrayList<>();
         final int size = Math.min(
                 10,
                 max(
@@ -322,7 +322,7 @@ public class Result {
                 )
         );
         for (int i = 0; i < size; ++i) {
-            final List<String> row = new ArrayList();
+            final List<String> row = new ArrayList<>();
             row.addAll(Arrays.asList(
                     i < p.holdings.size() ? p.holdings.get(i).first() : "",
                     i < p.holdings.size() ? format(p.holdings.get(i).second()) : "",
@@ -356,7 +356,7 @@ public class Result {
     }
 
     private List<String> getCompareHeadersRow(final Portfolio p1, final Portfolio p2) {
-        final List<String> res = new ArrayList(Arrays.asList(
+        final List<String> res = new ArrayList<>(Arrays.asList(
                 "", p1.name, p2.name, "Skillnad",
                 SPACE,
                 "Utveckling",
@@ -384,8 +384,8 @@ public class Result {
     }
 
     private List<List<String>> getCompareRows(final Portfolio p1, final Portfolio p2) {
-        final List<List<String>> res = new ArrayList();
-        res.add(new ArrayList(Arrays.asList(
+        final List<List<String>> res = new ArrayList<>();
+        res.add(new ArrayList<>(Arrays.asList(
                 "# Fonder",
                 Integer.toString(p1.funds.size()),
                 Integer.toString(p2.funds.size()),
@@ -409,9 +409,9 @@ public class Result {
     }
 
     private List<List<String>> getRankingsRows(final Rankings rankings) {
-        final List<List<String>> res = new ArrayList();
+        final List<List<String>> res = new ArrayList<>();
         rankings.funds.forEach(fr -> {
-            final List<String> row = new ArrayList();
+            final List<String> row = new ArrayList<>();
             row.add(fr.avanza.name);
             fr.values.forEach(p -> {
                 row.add(String.format("%d (%s)", p.first(), format(p.second())));
@@ -423,7 +423,7 @@ public class Result {
     }
 
     private List<String> getRankingsHeadersRow(final Rankings rankings) {
-        final List<String> res = new ArrayList();
+        final List<String> res = new ArrayList<>();
         res.add("");
         res.addAll(rankings.headers);
         res.add("Medel");
@@ -473,7 +473,7 @@ public class Result {
             final Double val1,
             final Double val2) {
         if (i >= rows.size()) {
-            rows.add(new ArrayList());
+            rows.add(new ArrayList<>());
             if (!first) {
                 rows.get(i).addAll(Arrays.asList("", "", "", "", SPACE));
             }

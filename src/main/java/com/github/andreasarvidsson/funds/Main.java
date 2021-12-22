@@ -20,23 +20,9 @@ public class Main {
     public static void main(String[] args) throws IOException {
         final Result result = new Result();
 
-        final Portfolio lfGlobal = new Portfolio(
-                "LF global",
-                new SelectedFund(100, "Länsförsäkringar Global Indexnära")
-        );
-
         final Portfolio avanzaGlobal = new Portfolio(
                 "Avanza global",
                 new SelectedFund(100, "Avanza Global")
-        );
-
-        final Portfolio rikaTillsammans2020 = new Portfolio(
-                "rikaTillsammans 2020",
-                new SelectedFund(62.5, "Länsförsäkringar Global Indexnära"),
-                new SelectedFund(10, "Handelsbanken Gl Småbolag Ind Cri A1 SEK"),
-                new SelectedFund(10, "SEB Hållbar Sverige Indexnära"),
-                new SelectedFund(12.5, "Länsförsäkringar Tillväxtmrkd Idxnära A"),
-                new SelectedFund(5, "Spiltan Aktiefond Investmentbolag")
         );
 
         final Portfolio rikaTillsammans2021 = new Portfolio(
@@ -51,22 +37,34 @@ public class Main {
                 "Pension",
                 new SelectedFund(63.5, "Länsförsäkringar Global Indexnära"),
                 new SelectedFund(8, "Handelsbanken Gl Småbolag Ind Cri A1 SEK"),
-                new SelectedFund(12, "Spiltan Aktiefond Investmentbolag"),
-                new SelectedFund(6, "PLUS Allabolag Sverige Index"),
+                new SelectedFund(10, "Spiltan Aktiefond Investmentbolag"),
+                new SelectedFund(8, "PLUS Allabolag Sverige Index"),
                 new SelectedFund(5.5, "Avanza Emerging Markets"),
                 new SelectedFund(5, "Swedbank Robur Access Asien A")
         );
 
         final Portfolio funds = new Portfolio(
                 "Värdepapper",
+                new SelectedFund(52, "Länsförsäkringar Global Indexnära"),
+                new SelectedFund(10, "Spiltan Aktiefond Investmentbolag"),
+                new SelectedFund(4, "Avanza Emerging Markets"),
+                new SelectedFund(4, "Swedbank Robur Access Asien A"),
+                new SelectedFund(7.5, "Öhman Global Growth A", GLOBAL_GROWTH_FEE),
+                new SelectedFund(7.5, "Swedbank Robur Technology A", ROBUR_TECH_FEE),
+                new SelectedFund(7.5, "Swedbank Robur Ny Teknik A", ROBUR_NYTEKNIK_FEE),
+                new SelectedFund(7.5, "TIN Ny Teknik A", TIN_NYTEKNIK_FEE)
+        );
+
+        final Portfolio izabel = new Portfolio(
+                "Izabel",
                 new SelectedFund(52, "Avanza Global"),
                 new SelectedFund(10, "Spiltan Aktiefond Investmentbolag"),
                 new SelectedFund(4, "Avanza Emerging Markets"),
                 new SelectedFund(4, "Swedbank Robur Access Asien A"),
-                new SelectedFund(7.5, "Öhman Global Growth", GLOBAL_GROWTH_FEE),
-                new SelectedFund(7.5, "Swedbank Robur Technology A", ROBUR_TECH_FEE),
-                new SelectedFund(7.5, "Swedbank Robur Ny Teknik A", ROBUR_NYTEKNIK_FEE),
-                new SelectedFund(7.5, "TIN Ny Teknik A", TIN_NYTEKNIK_FEE)
+                new SelectedFund(7.5, "Avanza World Tech by TIN"),
+                new SelectedFund(7.5, "Swedbank Robur Technology A"),
+                new SelectedFund(7.5, "Swedbank Robur Ny Teknik A"),
+                new SelectedFund(7.5, "TIN Ny Teknik A")
         );
 
         final Rankings rankings = new Rankings(
@@ -76,23 +74,20 @@ public class Main {
                 new SelectedFund("SEB Teknologifond", SEB_TEK_FEE),
                 new SelectedFund("Skandia Time Global", SKANDIA_TIME_FEE),
                 new SelectedFund("DNB Teknologi A", DNB_TEK_FEE),
-                new SelectedFund("Öhman Global Growth", GLOBAL_GROWTH_FEE)
+                new SelectedFund("Öhman Global Growth A", GLOBAL_GROWTH_FEE)
         //                new SelectedFund("TIN Ny Teknik A", TIN_NYTEKNIK_FEE),
         //                new SelectedFund("Lannebo Teknik"),
         //                new SelectedFund("Avanza World Tech by TIN")
         );
 
         //Display portfolio metrics.
-        result.add(lfGlobal);
         result.add(avanzaGlobal);
-        result.add(rikaTillsammans2020);
         result.add(rikaTillsammans2021);
         result.add(pension);
         result.add(funds);
+        result.add(izabel);
 
         //Compare portfolios.
-        result.compare(lfGlobal, avanzaGlobal);
-        result.compare(rikaTillsammans2020, rikaTillsammans2021);
         result.compare(pension, funds);
 
         //Rank different funds.
@@ -102,7 +97,7 @@ public class Main {
         result.print();
 
         //Store result as excel file in "excel" folder.
-        result.save();
+//        result.save();
     }
 
 }

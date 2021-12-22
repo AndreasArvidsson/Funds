@@ -9,8 +9,8 @@ import java.util.Map;
  */
 public class Sum {
 
-    private final Map<String, Double> sum = new HashMap();
-    private final Map<String, Double> percentages = new HashMap();
+    private final Map<String, Double> sum = new HashMap<>();
+    private final Map<String, Double> percentages = new HashMap<>();
 
     public void add(final String key, final double value, final double percentage) {
         if (!sum.containsKey(key)) {

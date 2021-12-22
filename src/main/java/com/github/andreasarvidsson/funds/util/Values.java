@@ -13,9 +13,9 @@ import java.util.Map;
  */
 public class Values implements Iterable<Pair<String, Double>> {
 
-    private final List<String> insertOrder = new ArrayList();
-    private final List<Pair<String, Double>> list = new ArrayList();
-    private final Map<String, Double> map = new HashMap();
+    private final List<String> insertOrder = new ArrayList<>();
+    private final List<Pair<String, Double>> list = new ArrayList<>();
+    private final Map<String, Double> map = new HashMap<>();
 
     public void add(final String key, final double value) {
         if (!map.containsKey(key)) {
@@ -32,13 +32,13 @@ public class Values implements Iterable<Pair<String, Double>> {
     public void compile(final boolean sort) {
         if (sort) {
             map.entrySet().forEach(e -> {
-                list.add(new Pair(e.getKey(), e.getValue()));
+                list.add(new Pair<>(e.getKey(), e.getValue()));
             });
             Collections.sort(list, (a, b) -> Double.compare(b.second(), a.second()));
         }
         else {
             insertOrder.forEach(key -> {
-                list.add(new Pair(key, map.get(key)));
+                list.add(new Pair<>(key, map.get(key)));
             });
         }
     }

@@ -15,11 +15,11 @@ import java.util.Set;
  */
 public class Comparison implements Iterable<String> {
 
-    private final Set<String> keys = new HashSet();
-    private final Map<String, Double> firstMap = new HashMap();
-    private final Map<String, Double> secondMap = new HashMap();
-    private final Map<String, Double> diffMap = new HashMap();
-    private final List<String> order = new ArrayList();
+    private final Set<String> keys = new HashSet<>();
+    private final Map<String, Double> firstMap = new HashMap<>();
+    private final Map<String, Double> secondMap = new HashMap<>();
+    private final Map<String, Double> diffMap = new HashMap<>();
+    private final List<String> order = new ArrayList<>();
 
     public void putFirst(final String key, final double value) {
         keys.add(key);

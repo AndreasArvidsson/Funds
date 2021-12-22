@@ -26,9 +26,9 @@ public class AvanzaFund {
     public List<String> categories;
     public List<ChartData> countryChartData, holdingChartData,
             sectorChartData, regionChartData;
-    public final Map<Country, ChartData> countryMap = new HashMap();
-    public final Map<Region, ChartData> regionsMap = new HashMap();
-    public final Map<Market, ChartData> marketMap = new HashMap();
+    public final Map<Country, ChartData> countryMap = new HashMap<>();
+    public final Map<Region, ChartData> regionsMap = new HashMap<>();
+    public final Map<Market, ChartData> marketMap = new HashMap<>();
     private Map<String, Double> developmentMap;
 
     public void compile() {
@@ -52,7 +52,7 @@ public class AvanzaFund {
             }
             marketMap.get(country.market).y += chartData.y;
         });
-        regionChartData = new ArrayList(regionsMap.values());
+        regionChartData = new ArrayList<>(regionsMap.values());
         Collections.sort(regionChartData, (a, b) -> Double.compare(b.y, a.y));
     }
 
@@ -98,7 +98,7 @@ public class AvanzaFund {
     }
 
     private Map<String, Double> compileDevelopmentMap() {
-        final Map<String, Double> res = new HashMap();
+        final Map<String, Double> res = new HashMap<>();
         Headers.DEVELOPMENT_TITLES.forEach(key -> {
             switch (key) {
                 case Headers.T_1_D:
