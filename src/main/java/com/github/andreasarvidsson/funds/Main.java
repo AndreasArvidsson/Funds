@@ -20,9 +20,9 @@ public class Main {
     public static void main(String[] args) throws IOException {
         final Result result = new Result();
 
-        final Portfolio avanzaGlobal = new Portfolio(
-                "Avanza global",
-                new SelectedFund(100, "Avanza Global")
+        final Portfolio globalIndex = new Portfolio(
+                "Global index",
+                new SelectedFund(100, "Länsförsäkringar Global Indexnära")
         );
 
         final Portfolio rikaTillsammans2021 = new Portfolio(
@@ -81,7 +81,7 @@ public class Main {
         );
 
         //Display portfolio metrics.
-        result.add(avanzaGlobal);
+        result.add(globalIndex);
         result.add(rikaTillsammans2021);
         result.add(pension);
         result.add(funds);
