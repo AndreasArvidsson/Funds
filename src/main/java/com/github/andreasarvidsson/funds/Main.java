@@ -56,7 +56,8 @@ public class Main {
         result.add(izabel);
 
         // Compare portfolios.
-        // result.compare(rikaTillsammans2021, pension);
+        result.compare(globalIndex, funds);
+        result.compare(rikaTillsammans, funds);
 
         // Rank different funds.
         result.add(rankings);
