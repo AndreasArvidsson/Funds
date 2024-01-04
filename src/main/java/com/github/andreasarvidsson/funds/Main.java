@@ -15,8 +15,8 @@ public class Main {
                 "Global index",
                 new SelectedFund(100, "Länsförsäkringar Global Index"));
 
-        final Portfolio rikaTillsammans2021 = new Portfolio(
-                "rikaTillsammans 2023",
+        final Portfolio rikaTillsammans = new Portfolio(
+                "rikaTillsammans 2024",
                 new SelectedFund(70, "Länsförsäkringar Global Index"),
                 new SelectedFund(10, "Handelsbanken Gl Småbolag Ind Cri A1 SEK"),
                 new SelectedFund(10, "Länsförsäkringar Tillväxtmarknad Index A"),
@@ -51,7 +51,7 @@ public class Main {
 
         // Display portfolio metrics.
         result.add(globalIndex);
-        result.add(rikaTillsammans2021);
+        result.add(rikaTillsammans);
         result.add(funds);
         result.add(izabel);
 
