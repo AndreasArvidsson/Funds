@@ -28,6 +28,23 @@ public abstract class HTTP {
         return res;
     }
 
+    public static <E> E post(
+        final String url,
+        final Object body,
+        final Class<E> type
+    ) throws IOException {
+        final HttpURLConnection con = (HttpURLConnection) new URL(
+            url
+        ).openConnection();
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Content-Type", "application/json; utf-8");
+        con.setDoOutput(true);
+        MAPPER.writeValue(con.getOutputStream(), body);
+        final E res = MAPPER.readValue(con.getInputStream(), type);
+        con.disconnect();
+        return res;
+    }
+
     public static <E> List<E> getList(final String url, final Class<E> type)
         throws IOException {
         final HttpURLConnection con = (HttpURLConnection) new URL(

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.andreasarvidsson.funds.util.FileCache;
 import com.github.andreasarvidsson.funds.util.HTTP;
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,23 +55,16 @@ public abstract class Avanza {
     }
 
     private static String getId(final String name) throws IOException {
-        final String encodedName = URLEncoder.encode(
-            name,
-            StandardCharsets.UTF_8.toString()
-        );
-        final SearchResults searchResult = HTTP.get(
-            String.format(
-                "%s/_cqbe/search/global-search/global-search-template?query=%s",
-                BASE,
-                encodedName
-            ),
+        final Map<String, String> body = new HashMap<>();
+        body.put("query", name);
+        final SearchResults searchResult = HTTP.post(
+            String.format("%s/_api/search/filtered-search", BASE),
+            body,
             SearchResults.class
         );
-        for (final SearchResultsGroup group : searchResult.resultGroups) {
-            for (final SearchResultsHit hit : group.hits) {
-                if (name.equalsIgnoreCase(hit.link.linkDisplay)) {
-                    return hit.link.orderbookId;
-                }
+        for (final SearchResultsHit hit : searchResult.hits) {
+            if (name.equalsIgnoreCase(hit.title)) {
+                return hit.orderBookId;
             }
         }
         throw new NoSuchElementException();
@@ -84,25 +75,12 @@ public abstract class Avanza {
 class SearchResults {
 
     public int totalNumberOfHits;
-    public String searchQuery, urlEncodedSearchQuery;
-    public List<SearchResultsGroup> resultGroups;
-}
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-class SearchResultsGroup {
-
+    public String searchQuery;
     public List<SearchResultsHit> hits;
-    public int numberOfHits;
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class SearchResultsHit {
 
-    public SearchResultsHitLink link;
-}
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-class SearchResultsHitLink {
-
-    public String orderbookId, linkDisplay;
+    public String title, orderBookId;
 }
