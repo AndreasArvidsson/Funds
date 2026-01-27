@@ -9,6 +9,8 @@ import com.github.andreasarvidsson.funds.util.Values;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -266,20 +268,20 @@ public class Result {
             row.addAll(
                 Arrays.asList(
                     fund.name,
-                    format(fd.percentage * 100),
-                    format(fd.getFee()),
+                    format1(fd.percentage * 100),
+                    format2(fd.getFee()),
                     Integer.toString(fund.risk),
                     fund.standardDeviation != null
-                        ? format(fund.standardDeviation)
+                        ? format1(fund.standardDeviation)
                         : MISSING,
                     fund.sharpeRatio != null
-                        ? format(fund.sharpeRatio)
+                        ? format1(fund.sharpeRatio)
                         : MISSING,
                     String.join(", ", fund.categories),
-                    format(fd.avanza.getCountry(Country.SWEDEN, 0.0)),
-                    format(fd.avanza.getCountry(Country.USA, 0.0)),
-                    format(fd.avanza.getRegion(Region.ASIA, 0.0)),
-                    format(fd.avanza.getNonDevelopedMarkets())
+                    format1(fd.avanza.getCountry(Country.SWEDEN, 0.0)),
+                    format1(fd.avanza.getCountry(Country.USA, 0.0)),
+                    format1(fd.avanza.getRegion(Region.ASIA, 0.0)),
+                    format1(fd.avanza.getNonDevelopedMarkets())
                 )
             );
             if (!p.companiesSize.isEmpty()) {
@@ -296,7 +298,7 @@ public class Result {
                 //                }
             }
             Headers.DEVELOPMENT_TITLES.forEach(key -> {
-                row.add(format(fund.getDevelopment(key, null)));
+                row.add(format1(fund.getDevelopment(key, null)));
             });
             res.add(row);
         });
@@ -308,30 +310,30 @@ public class Result {
         res.addAll(
             Arrays.asList(
                 "",
-                format(p.percentageSum),
-                format(p.avgFee),
-                format(p.risk),
-                format(p.sum.get(Headers.STANDARD_DEVIATION, null)),
-                format(p.sum.get(Headers.SHARPE_RATIO, null)),
+                format1(p.percentageSum),
+                format2(p.avgFee),
+                format1(p.risk),
+                format1(p.sum.get(Headers.STANDARD_DEVIATION, null)),
+                format1(p.sum.get(Headers.SHARPE_RATIO, null)),
                 "",
-                format(p.countries.get(Country.SWEDEN.name, 0.0)),
-                format(p.countries.get(Country.USA.name, 0.0)),
-                format(p.regions.get(Region.ASIA.name, 0.0)),
-                format(p.nonDevelopedMarkets)
+                format1(p.countries.get(Country.SWEDEN.name, 0.0)),
+                format1(p.countries.get(Country.USA.name, 0.0)),
+                format1(p.regions.get(Region.ASIA.name, 0.0)),
+                format1(p.nonDevelopedMarkets)
             )
         );
         if (!p.companiesSize.isEmpty()) {
             res.addAll(
                 Arrays.asList(
-                    format(p.companiesSize.get(0).second()),
-                    format(p.companiesSize.get(1).second()),
-                    format(p.companiesSize.get(2).second())
+                    format1(p.companiesSize.get(0).second()),
+                    format1(p.companiesSize.get(1).second()),
+                    format1(p.companiesSize.get(2).second())
                 )
             );
         }
         Headers.DEVELOPMENT_TITLES.forEach(title -> {
             if (p.developments.has(title)) {
-                res.add(format(p.developments.get(title, null)));
+                res.add(format1(p.developments.get(title, null)));
             }
         });
         return res;
@@ -377,22 +379,22 @@ public class Result {
                 Arrays.asList(
                     i < p.holdings.size() ? p.holdings.get(i).first() : "",
                     i < p.holdings.size()
-                        ? format(p.holdings.get(i).second())
+                        ? format1(p.holdings.get(i).second())
                         : "",
                     SPACE,
                     i < p.sectors.size() ? p.sectors.get(i).first() : "",
                     i < p.sectors.size()
-                        ? format(p.sectors.get(i).second())
+                        ? format1(p.sectors.get(i).second())
                         : "",
                     SPACE,
                     i < p.countries.size() ? p.countries.get(i).first() : "",
                     i < p.countries.size()
-                        ? format(p.countries.get(i).second())
+                        ? format1(p.countries.get(i).second())
                         : "",
                     SPACE,
                     i < p.regions.size() ? p.regions.get(i).first() : "",
                     i < p.regions.size()
-                        ? format(p.regions.get(i).second())
+                        ? format1(p.regions.get(i).second())
                         : ""
                 )
             );
@@ -409,7 +411,7 @@ public class Result {
                                 ? p.companiesSize.get(j).first()
                                 : "",
                             j < p.companiesSize.size()
-                                ? format(p.companiesSize.get(j).second())
+                                ? format1(p.companiesSize.get(j).second())
                                 : ""
                         )
                     );
@@ -520,10 +522,10 @@ public class Result {
             row.add(fr.avanza.name);
             fr.values.forEach(p -> {
                 row.add(
-                    String.format("%d (%s)", p.first(), format(p.second()))
+                    String.format("%d (%s)", p.first(), format1(p.second()))
                 );
             });
-            row.add(format(fr.mean));
+            row.add(format1(fr.mean));
             res.add(row);
         });
         return res;
@@ -602,9 +604,11 @@ public class Result {
             .addAll(
                 Arrays.asList(
                     title,
-                    format(val1),
-                    format(val2),
-                    val1 != null && val2 != null ? format(val2 - val1) : MISSING
+                    format1(val1),
+                    format1(val2),
+                    val1 != null && val2 != null
+                        ? format1(val2 - val1)
+                        : MISSING
                 )
             );
         if (first) {
@@ -612,11 +616,22 @@ public class Result {
         }
     }
 
-    private String format(final Double value) {
+    private String format1(final Double value) {
+        return formatNumber(value, 1);
+    }
+
+    private String format2(final Double value) {
+        return formatNumber(value, 2);
+    }
+
+    private String formatNumber(final Double value, final int scale) {
         if (value == null) {
             return MISSING;
         }
-        return String.format("%.2f", Math.round(value * 100.0) / 100.0);
+        return new BigDecimal(value)
+            .setScale(scale, RoundingMode.HALF_UP)
+            .stripTrailingZeros()
+            .toPlainString();
     }
 
     private int max(final int value, final int... values) {
