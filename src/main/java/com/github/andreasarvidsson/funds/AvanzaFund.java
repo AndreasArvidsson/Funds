@@ -19,13 +19,12 @@ public class AvanzaFund {
 
     public String name, isin;
     public double productFee;
-    public Double developmentOneDay, developmentOneMonth, developmentThreeMonths,
-            developmentSixMonths, developmentThisYear, developmentOneYear,
-            developmentThreeYears, developmentFiveYears, sharpeRatio, standardDeviation;
+    public Double developmentOneDay, developmentOneMonth, developmentThreeMonths, developmentSixMonths, developmentThisYear, developmentOneYear, developmentThreeYears, developmentFiveYears, sharpeRatio, standardDeviation;
     public int risk;
     public List<String> categories;
-    public List<ChartData> countryChartData, holdingChartData,
-            sectorChartData, regionChartData;
+    public List<
+        ChartData
+    > countryChartData, holdingChartData, sectorChartData, regionChartData;
     public final Map<Country, ChartData> countryMap = new HashMap<>();
     public final Map<Region, ChartData> regionsMap = new HashMap<>();
     public final Map<Market, ChartData> marketMap = new HashMap<>();
@@ -152,7 +151,5 @@ public class AvanzaFund {
 
         public String name, type, currency, countryCode;
         public Double y;
-
     }
-
 }

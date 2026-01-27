@@ -11,10 +11,11 @@ public class FundData {
     private final Double fee;
 
     public FundData(
-            final double percentage,
-            final double percentageNormalized,
-            final AvanzaFund avanza,
-            final Double fee) {
+        final double percentage,
+        final double percentageNormalized,
+        final AvanzaFund avanza,
+        final Double fee
+    ) {
         this.percentage = percentage;
         this.percentageNormalized = percentageNormalized;
         this.avanza = avanza;
@@ -24,5 +25,4 @@ public class FundData {
     public double getFee() {
         return fee != null ? fee : avanza.productFee;
     }
-
 }

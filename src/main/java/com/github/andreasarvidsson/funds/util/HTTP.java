@@ -17,20 +17,26 @@ public abstract class HTTP {
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final int TIMEOUT = 30 * 1000; //30sec
 
-    public static <E> E get(final String url, final Class<E> type) throws IOException {
-        final HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+    public static <E> E get(final String url, final Class<E> type)
+        throws IOException {
+        final HttpURLConnection con = (HttpURLConnection) new URL(
+            url
+        ).openConnection();
         con.setRequestMethod("GET");
         final E res = MAPPER.readValue(con.getInputStream(), type);
         con.disconnect();
         return res;
     }
 
-    public static <E> List<E> getList(final String url, final Class<E> type) throws IOException {
-        final HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+    public static <E> List<E> getList(final String url, final Class<E> type)
+        throws IOException {
+        final HttpURLConnection con = (HttpURLConnection) new URL(
+            url
+        ).openConnection();
         con.setRequestMethod("GET");
         final List<E> res = MAPPER.readValue(
-                con.getInputStream(),
-                MAPPER.getTypeFactory().constructCollectionType(List.class, type)
+            con.getInputStream(),
+            MAPPER.getTypeFactory().constructCollectionType(List.class, type)
         );
         con.disconnect();
         return res;
@@ -39,5 +45,4 @@ public abstract class HTTP {
     public static Document getDocument(final String url) throws IOException {
         return Jsoup.parse(new URL(url), TIMEOUT);
     }
-
 }

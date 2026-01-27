@@ -24,41 +24,54 @@ public class Portfolio {
     public final String name;
     public double percentageSum, avgFee, risk, nonDevelopedMarkets;
 
-    public Portfolio(
-            final String name,
-            final SelectedFund... selectedFunds) throws IOException {
+    public Portfolio(final String name, final SelectedFund... selectedFunds)
+        throws IOException {
         this(name, Arrays.asList(selectedFunds));
     }
 
-    public Portfolio(
-            final String name,
-            final List<SelectedFund> selectedFunds) throws IOException {
+    public Portfolio(final String name, final List<SelectedFund> selectedFunds)
+        throws IOException {
         this.name = name;
         for (final SelectedFund sf : selectedFunds) {
             percentageSum += sf.percentage;
         }
         for (final SelectedFund sd : selectedFunds) {
-            funds.add(new FundData(
+            funds.add(
+                new FundData(
                     sd.percentage,
                     sd.percentage / percentageSum,
                     Avanza.getFund(sd.name),
                     sd.fee
-            ));
+                )
+            );
         }
         percentageSum *= 100;
         for (final FundData fd : funds) {
             avgFee += fd.getFee() * fd.percentageNormalized;
             risk += fd.avanza.risk * fd.percentageNormalized;
-            nonDevelopedMarkets += fd.avanza.getNonDevelopedMarkets() * fd.percentageNormalized;
+            nonDevelopedMarkets +=
+                fd.avanza.getNonDevelopedMarkets() * fd.percentageNormalized;
             if (fd.avanza.sharpeRatio != null) {
-                sum.add(Headers.SHARPE_RATIO, fd.avanza.sharpeRatio, fd.percentageNormalized);
+                sum.add(
+                    Headers.SHARPE_RATIO,
+                    fd.avanza.sharpeRatio,
+                    fd.percentageNormalized
+                );
             }
             if (fd.avanza.standardDeviation != null) {
-                sum.add(Headers.STANDARD_DEVIATION, fd.avanza.standardDeviation, fd.percentageNormalized);
+                sum.add(
+                    Headers.STANDARD_DEVIATION,
+                    fd.avanza.standardDeviation,
+                    fd.percentageNormalized
+                );
             }
             Headers.DEVELOPMENT_TITLES.forEach(key -> {
                 if (fd.avanza.hasDevelopment(key)) {
-                    developments.add(key, fd.avanza.getDevelopment(key, 0.0), fd.percentageNormalized);
+                    developments.add(
+                        key,
+                        fd.avanza.getDevelopment(key, 0.0),
+                        fd.percentageNormalized
+                    );
                 }
             });
             fd.avanza.countryChartData.forEach(data -> {
@@ -73,22 +86,22 @@ public class Portfolio {
             fd.avanza.holdingChartData.forEach(data -> {
                 holdings.add(data.name, data.y * fd.percentageNormalized);
             });
-//            if (fd.morningstar != null) {
-//                companiesSize.add("Stora bolag", fd.morningstar.largeCompanies * fd.percentageNormalized);
-//                companiesSize.add("Medelstora bolag", fd.morningstar.middleCompanies * fd.percentageNormalized);
-//                companiesSize.add("Små bolag", fd.morningstar.smallCompanies * fd.percentageNormalized);
-//                final double swePercentage = fd.avanza.getRegion(Regions.SWEDEN) / 100;
-//                companiesSize.add("Stora svenska bolag", fd.morningstar.largeCompanies * fd.percentageNormalized * swePercentage);
-//                companiesSize.add("Medelstora svenska bolag", fd.morningstar.middleCompanies * fd.percentageNormalized * swePercentage);
-//                companiesSize.add("Små svenska bolag", fd.morningstar.smallCompanies * fd.percentageNormalized * swePercentage);
-//            }
+            //            if (fd.morningstar != null) {
+            //                companiesSize.add("Stora bolag", fd.morningstar.largeCompanies * fd.percentageNormalized);
+            //                companiesSize.add("Medelstora bolag", fd.morningstar.middleCompanies * fd.percentageNormalized);
+            //                companiesSize.add("Små bolag", fd.morningstar.smallCompanies * fd.percentageNormalized);
+            //                final double swePercentage = fd.avanza.getRegion(Regions.SWEDEN) / 100;
+            //                companiesSize.add("Stora svenska bolag", fd.morningstar.largeCompanies * fd.percentageNormalized * swePercentage);
+            //                companiesSize.add("Medelstora svenska bolag", fd.morningstar.middleCompanies * fd.percentageNormalized * swePercentage);
+            //                companiesSize.add("Små svenska bolag", fd.morningstar.smallCompanies * fd.percentageNormalized * swePercentage);
+            //            }
         }
-//        if (!companiesSize.isEmpty() && regions.has(Region.SWEDEN.name)) {
-//            final double sweSum = regions.get(Region.SWEDEN.name) * 0.01;
-//            companiesSize.normalize("Stora svenska bolag", sweSum);
-//            companiesSize.normalize("Medelstora svenska bolag", sweSum);
-//            companiesSize.normalize("Små svenska bolag", sweSum);
-//        }
+        //        if (!companiesSize.isEmpty() && regions.has(Region.SWEDEN.name)) {
+        //            final double sweSum = regions.get(Region.SWEDEN.name) * 0.01;
+        //            companiesSize.normalize("Stora svenska bolag", sweSum);
+        //            companiesSize.normalize("Medelstora svenska bolag", sweSum);
+        //            companiesSize.normalize("Små svenska bolag", sweSum);
+        //        }
         countries.compile(true);
         regions.compile(true);
         sectors.compile(true);
@@ -97,5 +110,4 @@ public class Portfolio {
         sum.normalize();
         developments.normalize();
     }
-
 }

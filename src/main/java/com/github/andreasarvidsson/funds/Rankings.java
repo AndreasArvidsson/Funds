@@ -14,28 +14,27 @@ import java.util.List;
  */
 public class Rankings {
 
-    private final static List<String> DEV_HEADERS = Arrays.asList(
-            Headers.T_6_M,
-            Headers.T_1_Y,
-            Headers.T_3_Y,
-            Headers.T_5_Y
+    private static final List<String> DEV_HEADERS = Arrays.asList(
+        Headers.T_6_M,
+        Headers.T_1_Y,
+        Headers.T_3_Y,
+        Headers.T_5_Y
     );
 
     public final String name;
     public final List<FundRank> funds = new ArrayList<>();
     public final List<String> headers = new ArrayList<>();
 
-    public Rankings(final String name, final SelectedFund... selectedFunds) throws IOException {
+    public Rankings(final String name, final SelectedFund... selectedFunds)
+        throws IOException {
         this(name, Arrays.asList(selectedFunds));
     }
 
-    public Rankings(final String name, final List<SelectedFund> selectedFunds) throws IOException {
+    public Rankings(final String name, final List<SelectedFund> selectedFunds)
+        throws IOException {
         this.name = name;
         for (final SelectedFund sf : selectedFunds) {
-            final FundRank fr = new FundRank(
-                    Avanza.getFund(sf.name),
-                    sf.fee
-            );
+            final FundRank fr = new FundRank(Avanza.getFund(sf.name), sf.fee);
             funds.add(fr);
         }
         final List<Pair<FundRank, Double>> fees = getFees();
@@ -65,7 +64,10 @@ public class Rankings {
         });
     }
 
-    private void addValues(final String header, final List<Pair<FundRank, Double>> values) {
+    private void addValues(
+        final String header,
+        final List<Pair<FundRank, Double>> values
+    ) {
         headers.add(header);
         for (int j = 0; j < values.size(); ++j) {
             final Pair<FundRank, Double> p = values.get(j);
@@ -140,5 +142,4 @@ public class Rankings {
             return fee != null ? fee : avanza.productFee;
         }
     }
-
 }

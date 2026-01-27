@@ -37,7 +37,8 @@ public class Excel {
         hrStyle.setBorderBottom(BorderStyle.THIN);
     }
 
-    public void save(final File file) throws FileNotFoundException, IOException {
+    public void save(final File file)
+        throws FileNotFoundException, IOException {
         file.getParentFile().mkdirs();
         wb.write(new FileOutputStream(file));
     }
@@ -60,9 +61,10 @@ public class Excel {
         final CellStyle boldStyle, hrStyle;
 
         private ExcelTable(
-                final Sheet sheet,
-                final CellStyle boldStyle,
-                final CellStyle hrStyle) {
+            final Sheet sheet,
+            final CellStyle boldStyle,
+            final CellStyle hrStyle
+        ) {
             this.sheet = sheet;
             this.boldStyle = boldStyle;
             this.hrStyle = hrStyle;
@@ -87,7 +89,9 @@ public class Excel {
             for (int i = 0; i < row.getPhysicalNumberOfCells(); ++i) {
                 row.getCell(i).setCellStyle(boldStyle);
             }
-            sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 0, 7));
+            sheet.addMergedRegion(
+                new CellRangeAddress(rowIndex, rowIndex, 0, 7)
+            );
         }
 
         public void addHR() {
@@ -108,7 +112,5 @@ public class Excel {
                 sheet.autoSizeColumn(i);
             }
         }
-
     }
-
 }

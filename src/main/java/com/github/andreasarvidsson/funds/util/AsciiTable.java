@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class AsciiTable {
 
-    private final static int CELL_SPACING = 3;
+    private static final int CELL_SPACING = 3;
     private final List<Row> rows = new ArrayList<>();
     private final List<Integer> colWidths = new ArrayList<>();
 
@@ -67,10 +67,13 @@ public class AsciiTable {
         rows.forEach(row -> {
             if (row.hr) {
                 addHR(sb);
-            }
-            else if (row.cells != null) {
+            } else if (row.cells != null) {
                 for (int i = 0; i < row.cells.size(); i++) {
-                    addCell(sb, row.cells.get(i), getColWidth(i, row.cells.size()));
+                    addCell(
+                        sb,
+                        row.cells.get(i),
+                        getColWidth(i, row.cells.size())
+                    );
                 }
                 sb.append(System.lineSeparator());
             }
@@ -78,7 +81,11 @@ public class AsciiTable {
         return sb.toString();
     }
 
-    private void addCell(final StringBuilder sb, final String cell, final int colWidth) {
+    private void addCell(
+        final StringBuilder sb,
+        final String cell,
+        final int colWidth
+    ) {
         sb.append(cell);
         pad(sb, colWidth - cell.length(), ' ');
     }
@@ -96,10 +103,9 @@ public class AsciiTable {
             colWidths.add(0);
         }
         while (colIndex < cells.size()) {
-            colWidths.set(colIndex,
-                    Math.max(colWidths.get(colIndex),
-                            cells.get(colIndex).length()
-                    )
+            colWidths.set(
+                colIndex,
+                Math.max(colWidths.get(colIndex), cells.get(colIndex).length())
             );
             ++colIndex;
         }
@@ -109,7 +115,11 @@ public class AsciiTable {
         return colWidths.get(index) + (index < size - 1 ? CELL_SPACING : 0);
     }
 
-    private void pad(final StringBuilder sb, int colWidth, final char character) {
+    private void pad(
+        final StringBuilder sb,
+        int colWidth,
+        final char character
+    ) {
         while (colWidth > 0) {
             sb.append(character);
             --colWidth;
@@ -130,7 +140,5 @@ public class AsciiTable {
             this.cells = null;
             this.hr = hr;
         }
-
     }
-
 }

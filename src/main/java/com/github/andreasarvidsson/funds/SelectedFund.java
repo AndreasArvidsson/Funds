@@ -10,35 +10,30 @@ public class SelectedFund {
     final Double percentage, fee;
 
     public SelectedFund(
-            final double percentage,
-            final String name,
-            final double fee) {
+        final double percentage,
+        final String name,
+        final double fee
+    ) {
         this.percentage = percentage / 100;
         this.name = name;
         this.fee = fee;
     }
 
-    public SelectedFund(
-            final String name) {
+    public SelectedFund(final String name) {
         this.percentage = null;
         this.name = name;
         this.fee = null;
     }
 
-    public SelectedFund(
-            final String name,
-            final double fee) {
+    public SelectedFund(final String name, final double fee) {
         this.percentage = null;
         this.name = name;
         this.fee = fee;
     }
 
-    public SelectedFund(
-            final double percentage,
-            final String name) {
+    public SelectedFund(final double percentage, final String name) {
         this.percentage = percentage / 100;
         this.name = name;
         this.fee = null;
     }
-
 }

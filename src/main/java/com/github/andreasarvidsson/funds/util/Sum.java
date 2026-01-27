@@ -12,7 +12,11 @@ public class Sum {
     private final Map<String, Double> sum = new HashMap<>();
     private final Map<String, Double> percentages = new HashMap<>();
 
-    public void add(final String key, final double value, final double percentage) {
+    public void add(
+        final String key,
+        final double value,
+        final double percentage
+    ) {
         if (!sum.containsKey(key)) {
             sum.put(key, 0.0);
             percentages.put(key, 0.0);
@@ -22,9 +26,11 @@ public class Sum {
     }
 
     public void normalize() {
-        sum.entrySet().forEach(e -> {
-            sum.put(e.getKey(), e.getValue() / percentages.get(e.getKey()));
-        });
+        sum
+            .entrySet()
+            .forEach(e -> {
+                sum.put(e.getKey(), e.getValue() / percentages.get(e.getKey()));
+            });
     }
 
     public boolean has(final String key) {
@@ -37,5 +43,4 @@ public class Sum {
         }
         return def;
     }
-
 }

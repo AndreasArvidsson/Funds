@@ -23,5 +23,4 @@ public class Mean {
     public double aritmethic() {
         return sum / count;
     }
-
 }

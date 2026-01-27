@@ -12,26 +12,30 @@ public class Main {
         final Result result = new Result();
 
         final Portfolio globalIndex = new Portfolio(
-                "Global index",
-                new SelectedFund(100, "Länsförsäkringar Global Index"));
+            "Global index",
+            new SelectedFund(100, "Länsförsäkringar Global Index")
+        );
 
         final Portfolio rikaTillsammans = new Portfolio(
-                "rikaTillsammans 2024",
-                new SelectedFund(70, "DNB Global Indeks S"),
-                new SelectedFund(20, "PLUS Allabolag Sverige Index"),
-                new SelectedFund(10, "Avanza Emerging Markets"));
+            "rikaTillsammans 2024",
+            new SelectedFund(70, "DNB Global Indeks S"),
+            new SelectedFund(20, "PLUS Allabolag Sverige Index"),
+            new SelectedFund(10, "Avanza Emerging Markets")
+        );
 
         final Portfolio funds = new Portfolio(
-                "Värdepapper",
-                new SelectedFund(80, "DNB Global Indeks S"),
-                new SelectedFund(10, "PLUS Allabolag Sverige Index"),
-                new SelectedFund(10, "Avanza Emerging Markets"));
+            "Värdepapper",
+            new SelectedFund(80, "DNB Global Indeks S"),
+            new SelectedFund(10, "PLUS Allabolag Sverige Index"),
+            new SelectedFund(10, "Avanza Emerging Markets")
+        );
 
         final Portfolio izabel = new Portfolio(
-                "Izabel",
-                new SelectedFund(75, "Avanza Global"),
-                new SelectedFund(15, "PLUS Allabolag Sverige Index"),
-                new SelectedFund(10, "Avanza Emerging Markets"));
+            "Izabel",
+            new SelectedFund(75, "Avanza Global"),
+            new SelectedFund(15, "PLUS Allabolag Sverige Index"),
+            new SelectedFund(10, "Avanza Emerging Markets")
+        );
 
         // Display portfolio metrics.
         result.add(globalIndex);
@@ -47,7 +51,6 @@ public class Main {
         result.print();
 
         // Store result as excel file in "excel" folder.
-        result.save();
+        // result.save();
     }
-
 }

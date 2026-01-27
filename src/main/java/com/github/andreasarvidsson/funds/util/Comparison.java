@@ -61,8 +61,8 @@ public class Comparison implements Iterable<String> {
             order.add(key);
             diffMap.put(key, second(key) - first(key));
         });
-        Collections.sort(order, (a, b)
-                -> Double.compare(Math.abs(diff(b)), Math.abs(diff(a)))
+        Collections.sort(order, (a, b) ->
+            Double.compare(Math.abs(diff(b)), Math.abs(diff(a)))
         );
     }
 
@@ -78,5 +78,4 @@ public class Comparison implements Iterable<String> {
     public Iterator<String> iterator() {
         return order.iterator();
     }
-
 }

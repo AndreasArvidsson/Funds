@@ -31,12 +31,15 @@ public class Values implements Iterable<Pair<String, Double>> {
 
     public void compile(final boolean sort) {
         if (sort) {
-            map.entrySet().forEach(e -> {
-                list.add(new Pair<>(e.getKey(), e.getValue()));
-            });
-            Collections.sort(list, (a, b) -> Double.compare(b.second(), a.second()));
-        }
-        else {
+            map
+                .entrySet()
+                .forEach(e -> {
+                    list.add(new Pair<>(e.getKey(), e.getValue()));
+                });
+            Collections.sort(list, (a, b) ->
+                Double.compare(b.second(), a.second())
+            );
+        } else {
             insertOrder.forEach(key -> {
                 list.add(new Pair<>(key, map.get(key)));
             });
@@ -74,5 +77,4 @@ public class Values implements Iterable<Pair<String, Double>> {
     public Iterator<Pair<String, Double>> iterator() {
         return list.iterator();
     }
-
 }
